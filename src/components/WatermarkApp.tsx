@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import WatermarkForm from './WatermarkForm';
 import { dataURItoBlob, generateFileName, makeRGBAStyle } from '../utils/imageUtils';
 import { v4 as uuidv4 } from 'uuid'; // 需要安装 uuid: npm install uuid @types/uuid
 import useDebounce from '../hooks/useDebounce'; // 导入 useDebounce
@@ -51,7 +50,6 @@ const WatermarkApp: React.FC<WatermarkAppProps> = ({ isMobileDevice }) => {
   // --- 结束修改 ---
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const canvasContainerRef = useRef<HTMLDivElement | null>(null);
 
   // --- 修改文件处理逻辑 (提取为独立函数) ---
   const processFiles = (files: FileList | null) => {
