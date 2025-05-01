@@ -1,0 +1,137 @@
+@import './variables.css';
+
+/* --- 表单区域 --- */
+.form-container h2 {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 500;
+  margin-bottom: calc(var(--spacing-unit) * 2); /* 16px */
+  color: var(--dark-color);
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: calc(var(--spacing-unit) * 2); /* 16px */
+}
+
+label {
+  display: block;
+  margin-bottom: calc(var(--spacing-unit) * 0.75); /* 6px */
+  font-weight: 500; /* 稍细的字体 */
+  font-size: 0.9rem; /* 稍小一点 */
+  color: var(--text-muted);
+}
+
+input[type="text"],
+input[type="color"],
+input[type="range"] {
+  width: 100%;
+  padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 1.5); /* 8px 12px */
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+input[type="text"]:focus,
+input[type="color"]:focus,
+input[type="range"]:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* 聚焦效果 */
+  outline: none;
+}
+
+input[type="color"] {
+  padding: calc(var(--spacing-unit) * 0.5); /* 颜色选择器内边距小一些 */
+  height: calc(var(--spacing-unit) * 5); /* 40px, 保持与其他输入框高度一致 */
+  cursor: pointer;
+}
+
+/* --- 美化 Range Input --- */
+input[type="range"] {
+  -webkit-appearance: none; /* 覆盖默认样式 */
+  appearance: none;
+  height: 8px; /* 滑块轨道高度 */
+  background: var(--light-color); /* 轨道背景 */
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 0; /* Range 不需要内边距 */
+}
+input[type="range"]:focus {
+  box-shadow: none; /* Range 的 focus 效果由滑块处理 */
+}
+
+/* Chrome, Edge, Safari */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px; /* 滑块宽度 */
+  height: 20px; /* 滑块高度 */
+  background: var(--primary-color); /* 滑块颜色 */
+  border-radius: 50%; /* 圆形滑块 */
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: var(--primary-hover-color);
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none; /* Firefox 默认可能有边框 */
+  transition: background-color 0.2s ease-in-out;
+}
+input[type="range"]::-moz-range-thumb:hover {
+  background: var(--primary-hover-color);
+}
+
+/* --- 文件上传按钮 --- */
+.file-input {
+  display: none;
+}
+
+.file-label {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: white;
+  padding: calc(var(--spacing-unit) * 1.25) calc(var(--spacing-unit) * 2.5); /* 10px 20px */
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border: none;
+  box-shadow: var(--box-shadow);
+  width: auto; /* 宽度自适应 */
+}
+
+.file-label:hover {
+  background-color: var(--primary-hover-color);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 悬停时阴影加深 */
+}
+
+/* --- 重置按钮样式 --- */
+.form-group-reset {
+  margin-top: calc(var(--spacing-unit) * 3); /* 与上方控件拉开距离 */
+  text-align: center; /* 按钮居中 */
+}
+
+.reset-button {
+  padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2); /* 8px 16px */
+  font-size: 0.9rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  border: 1px solid var(--secondary-color); /* 使用次要颜色边框 */
+  color: var(--secondary-color); /* 使用次要颜色文本 */
+  background-color: transparent; /* 透明背景 */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  width: auto; /* 宽度自适应 */
+}
+
+.reset-button:hover {
+  background-color: var(--secondary-color); /* 悬停时背景变为次要色 */
+  color: white; /* 文本变白 */
+  border-color: var(--secondary-color);
+}

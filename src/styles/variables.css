@@ -1,0 +1,18 @@
+/* --- CSS 变量定义 --- */
+:root {
+  --primary-color: #007bff; /* 主题蓝 */
+  --primary-hover-color: #0056b3;
+  --secondary-color: #6c757d; /* 次要灰 */
+  --danger-color: #dc3545; /* 危险红 */
+  --danger-hover-color: #c82333;
+  --light-color: #f8f9fa; /* 浅背景 */
+  --dark-color: #343a40; /* 深色文本/元素 */
+  --text-color: #212529; /* 主要文本颜色 */
+  --text-muted: #6c757d; /* 次要文本颜色 */
+  --border-color: #dee2e6; /* 边框颜色 */
+  --background-color: #ffffff; /* 主要背景色 */
+  --body-bg: #f1f3f5; /* 页面背景色 */
+  --border-radius: 0.3rem; /* 圆角大小 */
+  --box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* 阴影 */
+  --spacing-unit: 8px; /* 间距单位 */
+}

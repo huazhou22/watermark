@@ -1,0 +1,146 @@
+@import './variables.css';
+
+/* 移动设备布局优化 */
+.mobile-layout .watermark-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobile-layout .image-preview-container {
+  flex: 1;
+  min-height: 200px;
+}
+
+.mobile-preview {
+  max-height: 50vh; /* 限制预览区域高度 */
+}
+
+/* 表单样式优化 */
+.mobile-form {
+  padding: 8px; /* 调整内边距 */
+  margin-top: 0;
+}
+
+.form-header {
+  padding: 0 10px; 
+  margin-bottom: 8px; 
+}
+
+.header-content {
+  display: flex !important; /* 强制使用 flex 布局 */
+  justify-content: space-between !important; /* 强制两端对齐 */
+  align-items: center !important; /* 强制垂直居中 */
+  width: 100%; /* 确保占满宽度 */
+}
+
+.header-content h3 {
+  margin: 0; /* 移除标题外边距 */
+  flex-shrink: 0; /* 防止标题被压缩 */
+  font-size: 1.1rem; /* 设置合适的字体大小 */
+}
+
+/* 移动设备下的重置按钮样式 */
+.mobile-form .reset-button {
+  /* 覆盖全局样式 */
+  padding: 4px 8px !important; /* 使用更小的内边距 */
+  font-size: 0.85rem !important; /* 使用更小的字体 */
+  margin: 0 !important; /* 移除所有外边距 */
+  flex-shrink: 0 !important; /* 防止按钮被压缩 */
+  white-space: nowrap !important; /* 防止文字换行 */
+  /* 确保按钮不会被其他样式影响 */
+  display: inline-block !important;
+  width: auto !important; /* 宽度自适应内容 */
+  text-align: center !important;
+}
+
+/* 修改移动设备控件布局 */
+.mobile-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 5px; /* 将内边距移到这里 */
+}
+
+/* 移动设备表单内联布局 */
+.mobile-controls .inline-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.mobile-controls .inline-group label {
+  min-width: 80px;
+  margin-right: 10px;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.mobile-controls .inline-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-controls .color-input {
+  width: 40px !important; /* 如果需要覆盖其他样式，保留 !important */
+  height: 30px;
+  flex: 0 0 auto;
+}
+
+/* 确保移动设备上的表单更紧凑 */
+.mobile-layout .watermark-form {
+  margin-top: 5px;
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+}
+
+.mobile-controls label {
+  min-width: 80px;
+  margin-right: 8px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.mobile-controls input[type="range"] {
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-controls input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  padding: 4px;
+  height: 30px;
+}
+
+.mobile-controls input[type="color"] {
+  width: 40px;
+  height: 30px;
+}
+
+/* 减少移动设备上的间距 */
+.mobile-layout .thumbnail-strip {
+  margin-top: 8px;
+  padding: 5px;
+  gap: 5px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-layout .thumbnail-item {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+/* 进一步优化移动设备上的空间利用 */
+.mobile-layout .preview-section {
+  margin-bottom: 5px;
+}
+
+.mobile-layout canvas {
+  max-height: 40vh;
+  object-fit: contain;
+}

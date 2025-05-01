@@ -1,0 +1,102 @@
+@import './variables.css';
+
+/* --- 容器和布局 --- */
+.watermark-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+/* 桌面布局 */
+.desktop-layout {
+  flex-direction: row;
+  gap: 16px;
+  padding: 16px;
+  overflow: auto;
+}
+
+/* 图片预览容器 */
+.image-preview-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0; /* 防止flex子项溢出 */
+  max-height: calc(100vh - 32px); /* 减去padding */
+  overflow: auto;
+}
+
+/* 预览区域 */
+.preview-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  max-height: calc(100vh - 200px); /* 为缩略图和上传按钮留出空间 */
+  overflow: auto;
+  position: relative;
+}
+
+/* 预览区域内的canvas */
+.preview-section canvas {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* 缩略图条 */
+.thumbnail-strip {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 8px 0;
+  max-height: 120px;
+}
+
+/* 桌面表单包装器 */
+.desktop-form-wrapper {
+  flex: 0 0 300px; /* 固定宽度，不伸缩 */
+  max-width: 300px;
+  overflow-y: auto;
+  max-height: calc(100vh - 32px); /* 减去padding */
+}
+
+/* 桌面表单容器 */
+.desktop-form-container {
+  height: auto;
+  overflow-y: auto;
+}
+
+/* 移动布局 */
+.mobile-layout {
+  flex-direction: column;
+  height: calc(100vh - 60px); /* 为底部抽屉留出空间 */
+}
+
+/* 媒体查询 - 小屏幕设备 */
+@media (max-width: 1024px) {
+  .desktop-layout {
+    flex-direction: column;
+  }
+  
+  .desktop-form-wrapper {
+    flex: 0 0 auto;
+    max-width: 100%;
+    margin-top: 16px;
+  }
+}
+
+/* 媒体查询 - 超小屏幕设备 */
+@media (max-width: 600px) {
+  .desktop-layout {
+    padding: 8px;
+  }
+  
+  .preview-section {
+    max-height: calc(100vh - 160px);
+  }
+}

@@ -1,0 +1,134 @@
+/* 抽屉组件样式 */
+.watermark-drawer {
+  position: fixed;
+  bottom: 0; /* 改为底部固定 */
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: var(--background-color);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* 阴影方向改变 */
+  transition: all 0.3s ease;
+  max-height: 80vh;
+  overflow: hidden;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+}
+
+/* 抽屉头部样式 */
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+}
+
+.drawer-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* 切换按钮样式 */
+.toggle-button {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 4px 8px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s ease;
+}
+
+.toggle-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 抽屉内容区域 */
+.drawer-content {
+  padding: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow-y: auto;
+}
+
+.drawer-content.visible {
+  max-height: 70vh;
+  opacity: 1;
+}
+
+.drawer-content.hidden {
+  max-height: 0;
+  opacity: 0;
+  padding: 0;
+}
+
+/* 展开和收缩状态 */
+.watermark-drawer.expanded {
+  /* 展开状态样式 */
+}
+
+.watermark-drawer.collapsed {
+  /* 收缩状态下只显示头部 */
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 桌面版表单容器 */
+.desktop-form-container {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 16px;
+  height: auto;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+/* 表单控件容器 */
+.form-controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+/* 表单控件 */
+.form-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+/* 表单组 */
+.form-group {
+  margin-bottom: 8px;
+}
+
+/* 输入控件 */
+.form-group input {
+  max-width: 100%;
+}
+
+/* 重置按钮容器 */
+.reset-button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* 适配移动设备 */
+@media (max-width: 768px) {
+  .watermark-drawer {
+    max-height: 90vh;
+  }
+  
+  .drawer-content.visible {
+    max-height: 80vh;
+  }
+}
