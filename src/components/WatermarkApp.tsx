@@ -23,7 +23,7 @@ const defaultSettings = {
   alpha: 0.1,
   angle: -35,
   space: 4,
-  size: 1。5,
+  size: 1.5,
 };
 // --- 结束定义 ---
 
