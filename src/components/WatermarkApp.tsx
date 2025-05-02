@@ -18,12 +18,12 @@ interface WatermarkAppProps {
 
 // --- 定义默认值 ---
 const defaultSettings = {
-  text: '水印文字',
+  text: '公众号琴姐惠生活',
   color: '#000000',
-  alpha: 0.3,
-  angle: -30,
-  space: 2,
-  size: 1,
+  alpha: 0.1,
+  angle: -35,
+  space: 4,
+  size: 1。5,
 };
 // --- 结束定义 ---
 
