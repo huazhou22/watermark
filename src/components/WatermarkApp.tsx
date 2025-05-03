@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
-  Layout,
   Upload,
   Button,
   Space,
@@ -23,13 +22,15 @@ import { TransformWrapper, TransformComponent, useControls } from 'react-zoom-pa
 import { makeRGBAStyle } from '../utils/imageUtils';
 import { v4 as uuidv4 } from 'uuid';
 import useDebounce from '../hooks/useDebounce';
+import useOrientation from '../hooks/useOrientation';
 import WatermarkForm from './WatermarkForm';
 import ErrorBoundary from './ErrorBoundary';
 import { useMobileDevice } from '../utils/deviceDetection';
 import '../styles/WatermarkApp.css';
+import WatermarkDrawer from './WatermarkDrawer';
 
-const { Content, Sider } = Layout;
-const { Title, Text } = Typography;
+// 使用Typography中的组件
+const { Text } = Typography;
 
 interface ImageItem {
   id: string;
@@ -65,7 +66,11 @@ const ZoomControls = () => {
 };
 
 const WatermarkApp: React.FC = () => {
+  // 检测设备类型和屏幕方向
   const isMobileDevice = useMobileDevice();
+  const orientation = useOrientation();
+
+  // 水印设置状态
   const [text, setText] = useState<string>(defaultSettings.text);
   const [color, setColor] = useState<string>(defaultSettings.color);
   const [alpha, setAlpha] = useState<number>(defaultSettings.alpha);
@@ -73,14 +78,17 @@ const WatermarkApp: React.FC = () => {
   const [space, setSpace] = useState<number>(defaultSettings.space);
   const [size, setSize] = useState<number>(defaultSettings.size);
 
+  // 使用防抖处理频繁变化的值
   const debouncedAlpha = useDebounce(alpha, 150);
   const debouncedAngle = useDebounce(angle, 150);
   const debouncedSpace = useDebounce(space, 150);
   const debouncedSize = useDebounce(size, 150);
 
+  // 图片相关状态
   const [images, setImages] = useState<ImageItem[]>([]);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
 
+  // 引用
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const transformWrapperRef = useRef<any>(null);
 
@@ -153,7 +161,7 @@ const WatermarkApp: React.FC = () => {
     return images.map((imgItem) => (
       <div
         key={imgItem.id}
-        className={`thumbnail-item ${selectedImageId === imgItem.id ? 'selected' : ''}`}
+        className={`${isMobileDevice ? 'mobile-thumbnail-item' : 'thumbnail-item'} ${selectedImageId === imgItem.id ? 'selected' : ''}`}
         onClick={() => handleSelectImage(imgItem.id)}
       >
         {!imgItem.imageElement ? (
@@ -214,8 +222,20 @@ const WatermarkApp: React.FC = () => {
         pinch={{ step: 5 }}
       >
         <TransformComponent
-          wrapperStyle={{ width: '100%', height: '100%', position: 'relative' }}
-          contentStyle={{ width: '100%', height: '100%' }}
+          wrapperStyle={{
+            width: '100%',
+            height: '100%',
+            position: 'relative',
+            overflow: 'hidden' // 确保这一行存在
+          }}
+          contentStyle={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden' // 确保这一行存在
+          }}
         >
           <canvas
             ref={canvasRef}
@@ -259,27 +279,27 @@ const WatermarkApp: React.FC = () => {
     const canvas = canvasRef.current;
     const selectedImage = images.find((img) => img.id === selectedImageId);
     if (!canvas || !selectedImage?.imageElement) return;
-  
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-  
+
     canvas.width = selectedImage.imageElement.width;
     canvas.height = selectedImage.imageElement.height;
     ctx.drawImage(selectedImage.imageElement, 0, 0);
-  
+
     const fontSize = debouncedSize * Math.max(15, Math.min(canvas.width, canvas.height) / 25);
     ctx.font = `bold ${fontSize}px -apple-system,"Helvetica Neue",Helvetica,Arial,"PingFang SC","Hiragino Sans GB","WenQuanYi Micro Hei",sans-serif`;
     ctx.fillStyle = makeRGBAStyle(color, debouncedAlpha);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-  
+
     const textWidth = ctx.measureText(text).width;
     if (textWidth <= 0) return;
     const margin = ctx.measureText('啊').width;
     const step = Math.sqrt(Math.pow(canvas.width, 2) + Math.pow(canvas.height, 2));
     const xCount = Math.ceil(step / (textWidth + margin));
     const yCount = Math.ceil((step / (debouncedSpace * fontSize)) / 2);
-  
+
     ctx.save();
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.rotate((debouncedAngle * Math.PI) / 180);
@@ -303,26 +323,7 @@ const WatermarkApp: React.FC = () => {
     debouncedSize,
   ]);
 
-  const renderWatermarkForm = () => {
-    return (
-      <WatermarkForm
-        text={text}
-        setText={setText}
-        color={color}
-        setColor={setColor}
-        alpha={alpha}
-        setAlpha={setAlpha}
-        angle={angle}
-        setAngle={setAngle}
-        space={space}
-        setSpace={setSpace}
-        size={size}
-        setSize={setSize}
-        onReset={handleResetSettings}
-        isMobileDevice={isMobileDevice}
-      />
-    );
-  };
+  // 水印表单组件已直接在布局中使用，不再需要单独的渲染函数
 
   const handleSelectImage = (imageId: string) => {
     console.log('选择图片:', imageId);
@@ -386,78 +387,41 @@ const WatermarkApp: React.FC = () => {
     };
   }, [images]);
 
-  // 桌面布局：左右布局
-  if (!isMobileDevice) {
+  // 根据屏幕方向决定布局
+  const isLandscape = orientation === 'landscape';
+
+  // 横屏布局：左右结构
+  if (isLandscape && !isMobileDevice) {
     return (
-      <Layout style={{ height: '100vh', display: 'flex', boxSizing: 'border-box' }}>
-        <Content
-          style={{
-            padding: '16px',
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'auto',
-            boxSizing: 'border-box',
-          }}
-        >
-          <div style={{ marginBottom: '16px' }}>
+      <div className="layout-landscape">
+        {/* 内容区域 */}
+        <div className="content-area">
+          {/* 上传按钮区域 */}
+          <div className="upload-container">
             <Upload {...uploadProps}>
               <Button icon={<UploadOutlined />}>
                 {images.length > 0 ? '添加图片' : '选择图片'}
               </Button>
             </Upload>
           </div>
-          <div
-            className="preview-container-outer"
-            style={{
-              flex: 1,
-              minHeight: 0, // 防止溢出
-              position: 'relative',
-              background: '#f0f0f0',
-              borderRadius: '8px',
-              overflow: 'hidden',
-              boxSizing: 'border-box',
-            }}
-          >
+
+          {/* 预览区域 */}
+          <div className="preview-container">
             <ErrorBoundary>{renderPreview()}</ErrorBoundary>
           </div>
+
+          {/* 缩略图区域 - 只在有图片时显示 */}
           {images.length > 0 && (
-            <div
-              className="thumbnail-strip"
-              style={{
-                marginTop: '16px',
-                height: '60px',
-                overflowX: 'auto',
-                flexShrink: 0,
-              }}
-            >
+            <div className="thumbnails-container">
               {renderThumbnails()}
             </div>
           )}
-        </Content>
-        <Sider
-          width="30%"
-          style={{
-            padding: '16px',
-            background: '#fff',
-            borderLeft: '1px solid #f0f0f0',
-            overflow: 'auto',
-            minWidth: '250px',
-            maxWidth: '400px',
-            boxSizing: 'border-box',
-          }}
-        >
-          <div
-            style={{
-              marginBottom: '16px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Title level={5} style={{ margin: 0 }}>
-              水印设置
-            </Title>
+        </div>
+
+        {/* 设置区域 */}
+        <div className="settings-area">
+          <div className="settings-header">
+            <h3 className="settings-title">水印设置</h3>
             <Button
               icon={<ReloadOutlined />}
               onClick={handleResetSettings}
@@ -466,100 +430,82 @@ const WatermarkApp: React.FC = () => {
               重置
             </Button>
           </div>
-          {renderWatermarkForm()}
-        </Sider>
-      </Layout>
+          <WatermarkForm
+            text={text}
+            setText={setText}
+            color={color}
+            setColor={setColor}
+            alpha={alpha}
+            setAlpha={setAlpha}
+            angle={angle}
+            setAngle={setAngle}
+            space={space}
+            setSpace={setSpace}
+            size={size}
+            setSize={setSize}
+            onReset={handleResetSettings}
+            isMobileDevice={isMobileDevice}
+          />
+        </div>
+      </div>
     );
   }
 
-  // 移动布局：上下布局
+  // 竖屏布局：上下结构
   return (
-    <Layout
-      style={{
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        boxSizing: 'border-box',
-      }}
-    >
-      <Content
-        style={{
-          flex: '0 0 65%', // 增加图片区域高度
-          padding: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'auto',
-          boxSizing: 'border-box',
-        }}
-      >
-        <div style={{ marginBottom: '8px', flexShrink: 0 }}>
+    <div className="layout-portrait">
+      {/* 内容区域 */}
+      <div className="content-area">
+        {/* 上传按钮区域 */}
+        <div className="upload-container">
           <Upload {...uploadProps}>
-            <Button block icon={<UploadOutlined />}>
+            <Button icon={<UploadOutlined />}>
               {images.length > 0 ? '添加图片' : '选择图片'}
             </Button>
           </Upload>
         </div>
-        <div
-          className="preview-container-outer"
-          style={{
-            flex: 1,
-            minHeight: 0, // 防止溢出
-            position: 'relative',
-            background: '#f0f0f0',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            boxSizing: 'border-box',
-          }}
-        >
+
+        {/* 预览区域 */}
+        <div className="preview-container">
           <ErrorBoundary>{renderPreview()}</ErrorBoundary>
         </div>
+
+        {/* 缩略图区域 - 只在有图片时显示 */}
         {images.length > 0 && (
-          <div
-            className="thumbnail-strip"
-            style={{
-              marginTop: '8px',
-              height: '50px', // 减小高度
-              overflowX: 'auto',
-              flexShrink: 0,
-            }}
-          >
+          <div className="thumbnails-container">
             {renderThumbnails()}
-        </div>
+          </div>
         )}
-      </Content>
-      <div
-        style={{
-          flex: '0 0 35%', // 相应减少水印设置高度
-          padding: '8px',
-          background: '#fff',
-          borderTop: '1px solid #f0f0f0',
-          overflow: 'auto',
-          boxSizing: 'border-box',
-        }}
-      >
-        <div
-          style={{
-            marginBottom: '8px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Title level={5} style={{ margin: 0 }}>
-            水印设置
-          </Title>
-          <Button
-            icon={<ReloadOutlined />}
-            onClick={handleResetSettings}
-            size="small"
-          >
-            重置
-          </Button>
-        </div>
-        {renderWatermarkForm()}
       </div>
-    </Layout>
+
+      {/* 水印设置抽屉 */}
+      <WatermarkDrawer
+        title="水印设置"
+        defaultExpanded={false}
+        onReset={handleResetSettings}
+        orientation={orientation}
+        position="bottom"
+      >
+        <WatermarkForm
+          text={text}
+          setText={setText}
+          color={color}
+          setColor={setColor}
+          alpha={alpha}
+          setAlpha={setAlpha}
+          angle={angle}
+          setAngle={setAngle}
+          space={space}
+          setSpace={setSpace}
+          size={size}
+          setSize={setSize}
+          onReset={handleResetSettings}
+          isMobileDevice={true}
+        />
+      </WatermarkDrawer>
+    </div>
   );
+
 };
 
 export default WatermarkApp;

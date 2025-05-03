@@ -1,0 +1,159 @@
+/* 屏幕方向相关样式 */
+@import './variables.css';
+
+/* 横屏布局 - 左右结构 */
+.layout-landscape {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.layout-landscape .content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: var(--mobile-content-padding);
+  min-width: 0;
+}
+
+.layout-landscape .settings-area {
+  width: var(--landscape-sider-width);
+  min-width: var(--landscape-sider-min-width);
+  max-width: var(--landscape-sider-max-width);
+  height: 100vh;
+  overflow: auto;
+  border-left: 1px solid var(--border-color);
+  background-color: var(--background-color);
+  padding: var(--mobile-content-padding);
+  display: flex;
+  flex-direction: column;
+}
+
+.layout-landscape .settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.layout-landscape .settings-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* 竖屏布局 - 上下结构 */
+.layout-portrait {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.layout-portrait .content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: var(--mobile-content-padding);
+  height: calc(100vh - var(--drawer-header-height));
+  min-height: 0;
+}
+
+/* 上传按钮区域 */
+.upload-container {
+  margin-bottom: 10px;
+  flex-shrink: 0;
+  height: var(--mobile-upload-height);
+  display: flex;
+  align-items: center;
+}
+
+/* 预览容器 */
+.preview-container {
+  flex: 1;
+  min-height: 0;
+  margin-bottom: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--light-color);
+  border-radius: var(--border-radius);
+  position: relative;
+}
+
+.layout-portrait .preview-container {
+  max-height: calc(100% - var(--mobile-upload-height) - var(--mobile-thumbnail-height) - 30px);
+}
+
+/* 缩略图容器 */
+.thumbnails-container {
+  height: var(--mobile-thumbnail-height);
+  margin-bottom: var(--mobile-thumbnail-margin);
+  flex-shrink: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  align-items: center;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 缩略图项 */
+.thumbnail-item {
+  width: calc(var(--mobile-thumbnail-height) - 10px);
+  height: calc(var(--mobile-thumbnail-height) - 10px);
+  margin-right: 8px;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.thumbnail-item.selected {
+  border-color: var(--primary-color);
+}
+
+.thumbnail-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 确保画布不溢出 */
+canvas {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .layout-landscape .settings-area {
+    width: 40%;
+    min-width: 200px;
+  }
+}
+
+/* 小屏幕设备上强制使用竖屏布局 */
+@media (max-width: 576px) {
+  .layout-landscape {
+    flex-direction: column;
+  }
+  
+  .layout-landscape .settings-area {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+  }
+}

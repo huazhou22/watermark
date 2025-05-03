@@ -1,0 +1,114 @@
+/* 移动设备专用样式 */
+@import './variables.css';
+
+/* 移动布局容器 */
+.mobile-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* 移动内容区域 */
+.mobile-content {
+  flex: 1;
+  padding: var(--mobile-content-padding);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  height: calc(100vh - var(--drawer-header-height));
+  min-height: 0;
+}
+
+/* 上传按钮区域 */
+.mobile-upload-container {
+  margin-bottom: 10px;
+  flex-shrink: 0;
+  height: var(--mobile-upload-height);
+  display: flex;
+  align-items: center;
+}
+
+/* 预览容器 */
+.mobile-preview-container {
+  flex: 1;
+  min-height: 0;
+  max-height: calc(100% - var(--mobile-upload-height) - var(--mobile-thumbnail-height) - 30px);
+  margin-bottom: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--light-color);
+  border-radius: var(--border-radius);
+  position: relative;
+}
+
+/* 缩略图容器 */
+.mobile-thumbnail-container {
+  height: var(--mobile-thumbnail-height);
+  margin-bottom: var(--mobile-thumbnail-margin);
+  flex-shrink: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  align-items: center;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 缩略图项 */
+.mobile-thumbnail-item {
+  width: calc(var(--mobile-thumbnail-height) - 10px);
+  height: calc(var(--mobile-thumbnail-height) - 10px);
+  margin-right: 8px;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.mobile-thumbnail-item.selected {
+  border-color: var(--primary-color);
+}
+
+.mobile-thumbnail-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 确保画布不溢出 */
+.mobile-layout canvas {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* 移动表单样式 */
+.mobile-form {
+  padding: var(--mobile-drawer-padding);
+  overflow-y: auto;
+}
+
+/* 移动设备上的表单控件 */
+.mobile-form .ant-form-item {
+  margin-bottom: 8px;
+}
+
+.mobile-form .ant-input,
+.mobile-form .ant-input-number {
+  height: var(--mobile-input-height);
+}
+
+.mobile-form .ant-slider {
+  margin: 6px 0;
+}
+
+/* 确保抽屉组件在移动设备上的样式 */
+.mobile-layout .watermark-drawer {
+  max-height: 70vh;
+}

@@ -1,68 +1,64 @@
+/* 水印组件样式 */
 @import './variables.css';
 
-/* 移动设备布局优化 */
-.mobile-layout .watermark-container {
+/* 基础容器样式 */
+.watermark-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  height: 100%;
+  overflow: hidden;
 }
 
-.mobile-layout .image-preview-container {
+.image-preview-container {
   flex: 1;
-  min-height: 200px;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
 }
 
 .mobile-preview {
-  max-height: 50vh; /* 限制预览区域高度 */
+  max-height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 
-/* 表单样式优化 */
-.mobile-form {
-  padding: 8px; /* 调整内边距 */
-  margin-top: 0;
-}
-
+/* 表单样式 */
 .form-header {
-  padding: 0 10px; 
-  margin-bottom: 8px; 
+  padding: 0 10px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header-content {
-  display: flex !important; /* 强制使用 flex 布局 */
-  justify-content: space-between !important; /* 强制两端对齐 */
-  align-items: center !important; /* 强制垂直居中 */
-  width: 100%; /* 确保占满宽度 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .header-content h3 {
-  margin: 0; /* 移除标题外边距 */
-  flex-shrink: 0; /* 防止标题被压缩 */
-  font-size: 1.1rem; /* 设置合适的字体大小 */
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 1.1rem;
 }
 
-/* 移动设备下的重置按钮样式 */
-.mobile-form .reset-button {
-  /* 覆盖全局样式 */
-  padding: 4px 8px !important; /* 使用更小的内边距 */
-  font-size: 0.85rem !important; /* 使用更小的字体 */
-  margin: 0 !important; /* 移除所有外边距 */
-  flex-shrink: 0 !important; /* 防止按钮被压缩 */
-  white-space: nowrap !important; /* 防止文字换行 */
-  /* 确保按钮不会被其他样式影响 */
-  display: inline-block !important;
-  width: auto !important; /* 宽度自适应内容 */
-  text-align: center !important;
+/* 上传按钮容器 */
+.upload-button-container {
+  margin-bottom: 16px;
+  flex-shrink: 0;
 }
 
-/* 修改移动设备控件布局 */
+/* 移动设备控件布局 */
 .mobile-controls {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 0 5px; /* 将内边距移到这里 */
+  padding: 0 5px;
 }
 
-/* 移动设备表单内联布局 */
 .mobile-controls .inline-group {
   display: flex;
   flex-direction: row;
@@ -84,16 +80,9 @@
 }
 
 .mobile-controls .color-input {
-  width: 40px !important; /* 如果需要覆盖其他样式，保留 !important */
+  width: 40px;
   height: 30px;
   flex: 0 0 auto;
-}
-
-/* 确保移动设备上的表单更紧凑 */
-.mobile-layout .watermark-form {
-  margin-top: 5px;
-  border-top: 1px solid #eee;
-  padding-top: 8px;
 }
 
 .mobile-controls label {
@@ -120,27 +109,98 @@
   height: 30px;
 }
 
-/* 减少移动设备上的间距 */
-.mobile-layout .thumbnail-strip {
-  margin-top: 8px;
-  padding: 5px;
-  gap: 5px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
+/* 移动设备样式 */
+@media (max-width: var(--breakpoint-xs)) {
+  /* 容器样式 */
+  .mobile-layout .watermark-container {
+    gap: 5px;
+  }
 
-.mobile-layout .thumbnail-item {
-  width: 60px;
-  height: 60px;
-  flex-shrink: 0;
-}
+  /* 按钮样式 */
+  .mobile-layout .ant-btn {
+    padding: 0 8px;
+    height: 32px;
+  }
 
-/* 进一步优化移动设备上的空间利用 */
-.mobile-layout .preview-section {
-  margin-bottom: 5px;
-}
+  .mobile-layout .upload-button-container {
+    margin-bottom: 8px;
+  }
 
-.mobile-layout canvas {
-  max-height: 40vh;
-  object-fit: contain;
+  /* 预览区域 */
+  .mobile-layout .preview-section {
+    margin-bottom: 5px;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .mobile-layout canvas {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* 缩略图 */
+  .mobile-layout .thumbnail-strip {
+    margin-top: 8px;
+    margin-bottom: var(--mobile-thumbnail-margin);
+    padding: 5px;
+    gap: 5px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    height: var(--mobile-thumbnail-height);
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-layout .thumbnail-item {
+    width: calc(var(--mobile-thumbnail-height) - 10px);
+    height: calc(var(--mobile-thumbnail-height) - 10px);
+    flex-shrink: 0;
+  }
+
+  /* 表单样式 */
+  .mobile-form {
+    padding: var(--mobile-form-padding);
+    margin-top: 0;
+  }
+
+  .mobile-layout .watermark-form {
+    padding: 10px 10px 0 10px;
+    margin-top: 5px;
+    margin-bottom: 0;
+    border-top: 1px solid #eee;
+  }
+
+  .mobile-layout .ant-form-item {
+    margin-bottom: 8px;
+  }
+
+  .mobile-layout .ant-form-item:last-child {
+    margin-bottom: 8px;
+  }
+
+  .mobile-layout .ant-form-item-label {
+    padding-bottom: 4px;
+  }
+
+  .mobile-layout .ant-input-number,
+  .mobile-layout .ant-slider {
+    margin-bottom: 0;
+  }
+
+  /* 重置按钮 */
+  .mobile-form .reset-button {
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    margin: 0;
+    flex-shrink: 0;
+    white-space: nowrap;
+    display: inline-block;
+    width: auto;
+    text-align: center;
+  }
 }

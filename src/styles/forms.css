@@ -118,24 +118,6 @@ input[type="range"]::-moz-range-thumb:hover {
   text-align: center; /* 按钮居中 */
 }
 
-.reset-button {
-  padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2); /* 8px 16px */
-  font-size: 0.9rem;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  border: 1px solid var(--secondary-color); /* 使用次要颜色边框 */
-  color: var(--secondary-color); /* 使用次要颜色文本 */
-  background-color: transparent; /* 透明背景 */
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-  width: auto; /* 宽度自适应 */
-}
-
-.reset-button:hover {
-  background-color: var(--secondary-color); /* 悬停时背景变为次要色 */
-  color: white; /* 文本变白 */
-  border-color: var(--secondary-color);
-}
-
 /* 表单样式 */
 /* 水印表单 */
 .watermark-form {
@@ -270,4 +252,124 @@ input[type="range"]::-moz-range-thumb:hover {
   font-weight: 600;
   margin-bottom: 8px;
   color: #444;
+}
+
+/* 水印表单在抽屉中的样式 */
+.watermark-drawer .watermark-form {
+  padding: 0;
+  margin: 0;
+}
+
+/* 优化表单项间距 */
+.watermark-drawer .ant-form-item {
+  margin-bottom: 12px;
+}
+
+/* 最后一个表单项不需要底部间距 */
+.watermark-drawer .ant-form-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 表单样式 */
+@import './variables.css';
+
+/* 表单容器 */
+.form-container {
+  width: 100%;
+  overflow-y: auto;
+}
+
+/* 表单项 */
+.form-item {
+  margin-bottom: 16px;
+}
+
+/* 表单标签 */
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+/* 表单输入框 */
+.watermark-text-input {
+  width: 100%;
+  resize: vertical;
+}
+
+/* 表单头部 */
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.settings-header {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings-title {
+  margin: 0;
+}
+
+/* 移动设备适配 */
+@media (max-width: var(--breakpoint-xs)) {
+  .form-item {
+    margin-bottom: 8px;
+  }
+  
+  .form-header {
+    margin-bottom: 8px;
+  }
+  
+  /* 确保表单项标签能够完整显示 */
+  .ant-form-item-label > label {
+    white-space: normal;
+    height: auto;
+    line-height: 1.5;
+  }
+  
+  /* 自定义标签样式，使标签左对齐 */
+  .mobile-form .ant-form-item-label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    padding-left: 4px;
+  }
+}
+
+/* 确保表单项有足够的空间显示 */
+.ant-form-item-label {
+  white-space: normal; /* 允许标签文本换行 */
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+/* 表单控件优化 */
+.ant-input,
+.ant-input-number,
+.ant-slider {
+  width: 100%;
+}
+
+/* 颜色选择器优化 */
+.color-picker-container {
+  display: flex;
+  align-items: center;
+}
+
+.color-picker-container .ant-input {
+  flex: 1;
+  margin-right: 8px;
+}
+
+.color-picker-container .ant-input-color {
+  width: 40px;
+  height: 40px;
+  padding: 2px;
 }

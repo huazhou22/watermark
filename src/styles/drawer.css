@@ -1,232 +1,196 @@
 /* 抽屉组件样式 */
 .watermark-drawer {
   position: fixed;
-  bottom: 0; /* 改为底部固定 */
-  left: 0;
-  right: 0;
+  background-color: white;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  background-color: var(--background-color);
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* 阴影方向改变 */
-  transition: all 0.3s ease;
-  max-height: 80vh;
-  overflow: hidden;
-  border-top-left-radius: var(--border-radius);
-  border-top-right-radius: var(--border-radius);
-}
-
-/* 抽屉头部样式 */
-.drawer-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background-color: var(--primary-color);
-  color: white;
-  cursor: pointer;
-  border-top-left-radius: var(--border-radius);
-  border-top-right-radius: var(--border-radius);
-}
-
-.drawer-header h3 {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-/* 切换按钮样式 */
-.toggle-button {
-  background: transparent;
-  border: 1px solid white;
-  color: white;
-  padding: 4px 8px;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: background-color 0.2s ease;
-}
-
-.toggle-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* 抽屉内容区域 */
-.drawer-content {
-  padding: 0;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-  overflow-y: auto;
-}
-
-.drawer-content.visible {
-  max-height: 70vh;
-  opacity: 1;
-}
-
-.drawer-content.hidden {
-  max-height: 0;
-  opacity: 0;
-  padding: 0;
-}
-
-/* 展开和收缩状态 */
-.watermark-drawer.expanded {
-  /* 展开状态样式 */
-}
-
-.watermark-drawer.collapsed {
-  /* 收缩状态下只显示头部 */
-  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* 桌面版表单容器 */
-.desktop-form-container {
-  background-color: var(--background-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  padding: 16px;
-  height: auto;
-  max-height: 100%;
-  overflow-y: auto;
-}
-
-/* 表单控件容器 */
-.form-controls-container {
+  transition: transform 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  max-height: 100%;
-  overflow-y: auto;
 }
 
-/* 表单控件 */
-.form-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-}
-
-/* 表单组 */
-.form-group {
-  margin-bottom: 8px;
-}
-
-/* 输入控件 */
-.form-group input {
-  max-width: 100%;
-}
-
-/* 移动设备抽屉样式 */
-/* 移动设备抽屉 */
-.watermark-drawer {
-  position: fixed;
+/* 底部抽屉 - 用于竖屏模式 */
+.drawer-bottom {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
-  background-color: white;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  max-height: 80vh;
-  overflow: hidden;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  max-height: var(--portrait-drawer-max-height);
 }
 
-/* 抽屉头部 */
-.drawer-header {
+/* 右侧抽屉 - 用于横屏模式 */
+.drawer-right {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  max-width: var(--landscape-sider-max-width);
+}
+
+/* 抽屉头部 - 水平方向（底部抽屉） */
+.header-horizontal {
+  height: var(--drawer-header-height);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: 0 12px;
   background-color: var(--primary-color);
   color: white;
   cursor: pointer;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  position: relative;
 }
 
-.drawer-header h3 {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.toggle-button {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+/* 抽屉头部 - 垂直方向（右侧抽屉） */
+.header-vertical {
+  width: var(--drawer-header-height);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  background-color: var(--primary-color);
   color: white;
-  padding: 4px 8px;
-  border-radius: var(--border-radius);
-  font-size: 0.8rem;
-  transition: background-color 0.2s;
+  cursor: pointer;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  position: relative;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
 }
 
-.toggle-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+/* 拖动手柄 - 水平方向 */
+.handle-horizontal {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
 }
 
-/* 抽屉内容 */
+/* 拖动手柄 - 垂直方向 */
+.handle-vertical {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 40px;
+  width: 4px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+}
+
 .drawer-content {
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-  overflow-y: auto;
-}
-
-.drawer-content.visible {
-  max-height: 70vh;
-  opacity: 1;
+  padding: 10px;
+  overflow: auto;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
 }
 
 .drawer-content.hidden {
-  max-height: 0;
-  opacity: 0;
+  display: none;
 }
 
-/* 桌面表单容器 */
-.desktop-form-container {
-  padding: 16px;
-  height: 100%;
-  overflow-y: auto;
+.drawer-content.visible {
+  display: block;
 }
 
-/* 表单控件容器 */
-.form-controls-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-height: 100%;
-  overflow-y: auto;
+/* 收起状态 */
+.drawer-bottom.collapsed {
+  transform: translateY(calc(100% - var(--drawer-header-height)));
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* 表单控件 */
-.form-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
+.drawer-right.collapsed {
+  transform: translateX(calc(100% - var(--drawer-header-height)));
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
 }
 
-/* 表单组 */
-.form-group {
-  margin-bottom: 8px;
+/* 按钮样式 */
+.toggle-button {
+  color: white !important;
+  border: none !important;
+  padding: 0 !important;
+  height: 28px !important;
+  width: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important; /* 确保按钮位于顶层 */
+  z-index: 10 !important; /* 提高按钮的z-index */
+  cursor: pointer !important; /* 确保鼠标指针显示为可点击状态 */
 }
 
-/* 输入控件 */
-.form-group input {
-  max-width: 100%;
+.reset-button {
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  padding: 4px 8px !important;
+  height: 28px !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important; /* 确保按钮位于顶层 */
+  z-index: 10 !important; /* 提高按钮的z-index */
+  cursor: pointer !important; /* 确保鼠标指针显示为可点击状态 */
 }
 
-/* 重置按钮容器 */
-.reset-button-container {
-  display: flex;
-  justify-content: flex-end;
-  padding: 8px 16px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-/* 适配移动设备 */
-@media (max-width: 768px) {
+/* 响应式适配 */
+@media (max-width: var(--breakpoint-xs)) {
   .watermark-drawer {
-    max-height: 90vh;
+    z-index: 1000;
   }
-  
-  .drawer-content.visible {
-    max-height: 80vh;
+
+  .drawer-bottom {
+    max-height: var(--portrait-drawer-max-height);
+  }
+
+  .drawer-right {
+    max-width: 80vw;
+  }
+
+  .drawer-content {
+    padding: var(--mobile-drawer-padding);
+  }
+}
+
+/* 强制小屏幕设备使用底部抽屉 */
+@media (max-width: 576px) {
+  .drawer-right {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 12px 12px 0 0;
+    max-width: none;
+    max-height: var(--portrait-drawer-max-height);
+  }
+
+  .header-vertical {
+    width: 100%;
+    height: var(--drawer-header-height);
+    flex-direction: row;
+    writing-mode: horizontal-tb;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .handle-vertical {
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+  }
+
+  .drawer-right.collapsed {
+    transform: translateY(calc(100% - var(--drawer-header-height)));
   }
 }

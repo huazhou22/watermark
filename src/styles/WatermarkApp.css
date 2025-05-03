@@ -1,6 +1,9 @@
+/* WatermarkApp组件专用样式 */
+
+/* 缩略图样式 */
 .thumbnail-item {
   display: inline-block;
-  width: 50px; /* 减小缩略图尺寸 */
+  width: 50px;
   height: 50px;
   margin-right: 8px;
   border: 2px solid transparent;
@@ -9,7 +12,7 @@
 }
 
 .thumbnail-item.selected {
-  border-color: #1890ff;
+  border-color: var(--primary-color);
 }
 
 .thumbnail-item img {
@@ -18,27 +21,36 @@
   object-fit: cover;
 }
 
-.delete-thumb-button {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  padding: 0;
-  line-height: 16px;
-}
-
-.preview-controls {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: transparent;
-  padding: 4px;
-  border-radius: 4px;
-  z-index: 10; /* 确保在 canvas 上方 */
-}
-
-.loading-container {
+/* 缩略图容器 */
+.thumbnail-strip {
   display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 5px 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 表单样式 */
+.desktop-sider .ant-form-item-label > label {
+  white-space: normal;
+  height: auto;
+  line-height: 1.5;
+}
+
+.settings-header {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  height: 100%;
+}
+
+.settings-title {
+  margin: 0;
+}
+
+.loading-text-container {
+  padding: 30px;
+  text-align: center;
 }

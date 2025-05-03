@@ -1,133 +1,69 @@
 /* 主样式文件 - 导入所有模块 */
-@import './variables.css';
-@import './base.css';
-@import './layout.css';
-@import './preview.css';
-@import './thumbnails.css';
-@import './forms.css';
-@import './watermark.css';
-@import './drawer.css'; /* 添加抽屉样式 */
+@import './variables.css';  /* 变量优先 */
+@import './base.css';       /* 基础样式 */
+@import './layout.css';     /* 布局样式 */
+@import './preview.css';    /* 预览组件样式 */
+@import './thumbnails.css'; /* 缩略图样式 */
+@import './forms.css';      /* 表单样式 */
+@import './watermark.css';  /* 水印组件样式 */
+@import './drawer.css';     /* 抽屉组件样式 */
+@import './mobile.css';     /* 移动设备专用样式 */
+@import './orientation.css'; /* 屏幕方向相关样式 */
+@import './responsive.css'; /* 响应式样式放在最后，确保可以覆盖其他样式 */
 
-/* 自定义样式，用于扩展 Ant Design */
-
-/* 缩略图样式 */
-.thumbnail-strip {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  gap: 8px;
-  scrollbar-width: thin;
-}
-
-.thumbnail-strip::-webkit-scrollbar {
-  height: 6px;
-}
-
-.thumbnail-strip::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-}
-
-.thumbnail-item {
-  position: relative;
-  width: 70px;
-  height: 70px;
-  border-radius: 4px;
+/* Ant Design组件样式覆盖 */
+.ant-layout {
+  height: 100%;
   overflow: hidden;
-  cursor: pointer;
-  flex-shrink: 0;
-  border: 2px solid transparent;
-  transition: border-color 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f5f5f5;
 }
 
-.thumbnail-item.selected {
-  border-color: #1677ff;
+.ant-empty svg {
+  max-height: 40px;
 }
 
-.thumbnail-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.ant-empty-normal {
+  margin: 0;
+  padding: 0;
 }
 
-.delete-thumb-button {
-  position: absolute !important;
-  top: 2px !important;
-  right: 2px !important;
-  width: 20px !important;
-  height: 20px !important;
-  min-width: 20px !important;
-  padding: 0 !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
+/* 确保移动设备上的表单控件尺寸合适 */
+@media (max-width: var(--breakpoint-xs)) {
+  .ant-form-item {
+    margin-bottom: 8px;
+  }
 
-.thumbnail-item:hover .delete-thumb-button {
-  opacity: 1;
-}
+  .ant-input, .ant-input-number {
+    height: var(--mobile-input-height);
+  }
 
-/* 预览容器样式 */
-.preview-container {
-  border: 1px solid #f0f0f0;
-  border-radius: 8px;
-}
+  .ant-slider {
+    margin: 6px 0;
+  }
 
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-}
-
-/* 移动设备适配 */
-@media (max-width: 576px) {
-  .thumbnail-item {
-    width: 60px;
-    height: 60px;
+  .ant-form-item-control-input {
+    min-height: var(--mobile-input-height);
   }
 }
 
+/* 删除重复的缩略图样式，已在thumbnails.css中定义 */
 
-/* 预览容器外部包裹层 */
-.preview-container-outer {
-  /* 可以添加背景色等 */
-}
-/* 预览区域控件（下载、删除、缩放） */
-.preview-controls {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: transparent;
-  padding: 5px 10px;
-  border-radius: 4px;
-  z-index: 10; /* 确保在 Canvas 上方 */
-  box-shadow: none;
-}
+/* 删除重复的预览容器样式，已在preview.css中定义 */
 
 /* 缩放控件特定样式 */
 .zoom-controls .ant-btn {
   padding: 0 8px; /* 调整按钮内边距 */
 }
 
-/* 确保 Canvas 在 TransformComponent 中居中 */
-.react-transform-component {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
+/* 媒体查询部分 */
+@media (max-width: 1024px) {
+  .desktop-layout {
+    flex-direction: column;
+    overflow: hidden; /* 改为 hidden 而不是 auto */
+  }
 
-/* 移动端抽屉按钮 */
-@media (max-width: 768px) {
-  /* 可以根据需要调整按钮样式 */
+  .desktop-form-wrapper {
+    flex: 0 0 auto;
+    max-width: 100%;
+    margin-top: 16px;
+  }
 }

@@ -1,32 +1,108 @@
+/* 基础布局样式 */
 @import './variables.css';
 
-/* --- 容器和布局 --- */
-/* 增强自适应布局 */
-.watermark-container {
-  display: flex;
+/* 全局布局控制 */
+html, body, #root {
   width: 100%;
   height: 100%;
-  max-height: 100vh;
   overflow: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* 应用容器 */
+.app-container {
+  max-width: 95%;
+  width: 95%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 10px; /* 从16px减少到10px */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 在超宽屏幕上限制最大宽度 */
+@media (min-width: 1920px) {
+  .app-container {
+    max-width: 1800px;
+    width: 95%;
+  }
+}
+
+.app-header {
+  margin-bottom: 8px; /* 从16px减少到8px */
+  flex-shrink: 0;
+}
+
+.app-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-footer {
+  margin-top: 16px;
+  flex-shrink: 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
 }
 
 /* 桌面布局 */
 .desktop-layout {
-  flex-direction: row;
-  gap: 16px;
-  padding: 16px;
-  overflow: auto;
-  height: 100vh;
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
-/* 图片预览容器 */
-.image-preview-container {
+.desktop-content {
+  padding: 16px;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-width: 0; /* 防止flex子项溢出 */
-  max-height: calc(100vh - 32px); /* 减去padding */
+  overflow: hidden;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+}
+
+.desktop-sider {
+  padding: 16px;
+  background: var(--background-color);
+  border-left: 1px solid var(--border-color);
   overflow: auto;
+  min-width: 280px;
+  max-width: 400px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* 移动布局 */
+.mobile-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.mobile-content {
+  flex: 1;
+  padding: var(--mobile-content-padding);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  height: calc(100vh - var(--drawer-header-height));
+  min-height: 0;
 }
 
 /* 预览区域 */
@@ -36,69 +112,52 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 200px;
-  max-height: calc(100vh - 200px); /* 为缩略图和上传按钮留出空间 */
-  overflow: auto;
+  max-height: calc(100% - 60px);
+  overflow: hidden;
   position: relative;
+  min-height: 0;
 }
 
-/* 预览区域内的canvas */
-.preview-section canvas {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-/* 缩略图条 */
-.thumbnail-strip {
+/* 预览容器外部包裹层 */
+.preview-container-outer {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  background: var(--light-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-sizing: border-box;
   display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  gap: 8px;
-  padding: 8px 0;
-  max-height: 120px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  max-height: calc(100% - 10px);
 }
 
-/* 桌面表单包装器 */
-.desktop-form-wrapper {
-  flex: 0 0 300px; /* 固定宽度，不伸缩 */
-  max-width: 300px;
-  overflow-y: auto;
-  max-height: calc(100vh - 32px); /* 减去padding */
+/* 确保 Canvas 在 TransformComponent 中居中 */
+.react-transform-component {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
 }
 
-/* 桌面表单容器 */
-.desktop-form-container {
-  height: auto;
-  overflow-y: auto;
+/* 拖动调整宽度的分隔线 */
+.resizer {
+  width: 8px;
+  height: 100%;
+  background-color: var(--border-color);
+  position: absolute;
+  left: 0;
+  top: 0;
+  cursor: col-resize;
+  z-index: 10;
+  transition: background-color 0.2s;
 }
 
-/* 移动布局 */
-.mobile-layout {
-  flex-direction: column;
-  height: calc(100vh - 60px); /* 为底部抽屉留出空间 */
-}
-
-/* 媒体查询 - 小屏幕设备 */
-@media (max-width: 1024px) {
-  .desktop-layout {
-    flex-direction: column;
-  }
-  
-  .desktop-form-wrapper {
-    flex: 0 0 auto;
-    max-width: 100%;
-    margin-top: 16px;
-  }
-}
-
-/* 媒体查询 - 超小屏幕设备 */
-@media (max-width: 600px) {
-  .desktop-layout {
-    padding: 8px;
-  }
-  
-  .preview-section {
-    max-height: calc(100vh - 160px);
-  }
+.resizer:hover,
+.resizer.active {
+  background-color: var(--primary-color);
 }

@@ -1,32 +1,36 @@
 @import './variables.css';
 
-/* --- 图片预览区域 --- */
+/* 图片预览区域 */
 .upload-section {
   text-align: center;
-  margin-bottom: var(--spacing-unit); /* 8px */
+  margin-bottom: var(--spacing-unit);
 }
 
 .preview-section {
-  position: relative;
-  width: 100%;
-  display: flex; /* 用于居中 Canvas */
+  display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
+  max-height: 100%;
 }
 
 .canvas-container {
-  width: 100%;
-  max-height: 65vh; /* 调整最大高度 */
-  overflow: auto; /* 保持滚动 */
+  position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
-  border: 1px dashed var(--border-color); /* 使用变量颜色 */
-  padding: var(--spacing-unit); /* 8px */
-  margin-top: var(--spacing-unit); /* 8px */
+  justify-content: center;
+  width: 100%;
+  min-height: 150px;
+  max-height: 100%;
+  overflow: hidden;
+  background-color: var(--light-color);
+  border: 1px dashed var(--border-color);
   border-radius: var(--border-radius);
-  background-color: var(--light-color); /* 给容器一个浅背景 */
-  min-height: 250px; /* 增加最小高度 */
+  padding: var(--spacing-unit);
+  margin-top: var(--spacing-unit);
 }
 
 canvas {
@@ -35,7 +39,7 @@ canvas {
   object-fit: contain;
   display: block;
   margin: 0 auto;
-  border-radius: calc(var(--border-radius) / 2); /* 给画布轻微圆角 */
+  border-radius: calc(var(--border-radius) / 2);
 }
 
 .no-image-text {
@@ -45,18 +49,21 @@ canvas {
   padding: calc(var(--spacing-unit) * 2);
 }
 
+/* 预览控件 */
 .preview-controls {
   position: absolute;
-  top: calc(var(--spacing-unit) * 1.5); /* 12px */
-  right: calc(var(--spacing-unit) * 1.5); /* 12px */
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  padding: 5px 10px;
+  border-radius: 4px;
   z-index: 10;
-  display: flex;
-  gap: var(--spacing-unit); /* 8px */
+  box-shadow: none;
 }
 
 .control-button {
-  padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5); /* 6px 12px */
-  font-size: 0.875rem; /* 14px */
+  padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+  font-size: 0.875rem;
   border-radius: var(--border-radius);
   cursor: pointer;
   border: none;
@@ -64,13 +71,15 @@ canvas {
   transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   box-shadow: var(--box-shadow);
 }
+
 .control-button:hover {
-  filter: brightness(1.1); /* 悬停时变亮 */
+  filter: brightness(1.1);
 }
 
 .download-button {
   background-color: var(--primary-color);
 }
+
 .download-button:hover {
   background-color: var(--primary-hover-color);
 }
@@ -78,13 +87,55 @@ canvas {
 .delete-button {
   background-color: var(--danger-color);
 }
+
 .delete-button:hover {
   background-color: var(--danger-hover-color);
 }
 
-/* --- 拖拽状态样式 --- */
+/* 缩放控件特定样式 */
+.zoom-controls .ant-btn {
+  padding: 0 8px;
+}
+
+/* 预览容器外部包裹层 - 合并自layout.css中的重复定义 */
+.preview-container-outer {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  background: var(--light-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  max-height: calc(100% - 10px); /* 确保不会溢出 */
+}
+
+/* 确保 Canvas 在 TransformComponent 中居中 */
+.react-transform-component {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  max-height: 100%; /* 确保不会溢出 */
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* 拖拽状态样式 */
 .image-preview-container.dragging {
-  background-color: var(--light-color); /* 拖拽时改变背景色 */
+  background-color: var(--light-color);
 }
 
 .drag-overlay {
@@ -96,12 +147,13 @@ canvas {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 123, 255, 0.1); /* 主题色半透明背景 */
-  border: 3px dashed var(--primary-color); /* 虚线边框 */
+  background-color: rgba(0, 123, 255, 0.1);
+  border: 3px dashed var(--primary-color);
   border-radius: var(--border-radius);
-  z-index: 20; /* 最高层级 */
-  pointer-events: none; /* 允许下层事件穿透（虽然这里不需要） */
+  z-index: 20;
+  pointer-events: none;
   color: var(--primary-color);
   font-size: 1.2rem;
   font-weight: 500;
+  max-height: 100%;
 }

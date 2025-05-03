@@ -171,11 +171,12 @@ const WatermarkForm: React.FC<WatermarkFormProps> = ({
       ) : (
         // 桌面设备下的常规布局
         <>
-          <Form.Item label="水印文字" style={formItemStyle}>
-            <Input
+          <Form.Item label="水印文字">
+            <Input.TextArea
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="输入水印文字"
+              className="watermark-text-input"
+              autoSize={{ minRows: 2, maxRows: 6 }}
             />
           </Form.Item>
 

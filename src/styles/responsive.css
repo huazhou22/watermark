@@ -1,0 +1,105 @@
+/* 响应式布局核心文件 */
+@import './variables.css';
+
+/* 响应式工具类 */
+.hide-xs {
+  display: none;
+}
+
+@media (min-width: var(--breakpoint-xs)) {
+  .hide-xs {
+    display: initial;
+  }
+  .show-xs-only {
+    display: none;
+  }
+}
+
+.hide-sm {
+  display: none;
+}
+
+@media (min-width: var(--breakpoint-sm)) {
+  .hide-sm {
+    display: initial;
+  }
+  .show-sm-only {
+    display: none;
+  }
+}
+
+/* 移动设备布局基础样式 */
+@media (max-width: var(--breakpoint-xs)) {
+  /* 应用容器适配 */
+  .app-container {
+    padding: 5px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .app-header {
+    margin-bottom: 5px;
+  }
+
+  .app-header h1 {
+    font-size: 1.3rem;
+    margin: 0;
+  }
+
+  /* 移动布局容器 */
+  .mobile-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* 抽屉组件适配 */
+  .mobile-layout .watermark-drawer {
+    max-height: 70vh;
+  }
+
+  .mobile-layout .drawer-content {
+    padding-bottom: var(--mobile-drawer-bottom-padding);
+  }
+}
+
+/* 平板设备适配 */
+@media (min-width: var(--breakpoint-xs)) and (max-width: var(--breakpoint-md)) {
+  .desktop-layout {
+    flex-direction: column;
+  }
+
+  .desktop-content,
+  .desktop-sider {
+    flex: none;
+    width: 100%;
+  }
+
+  .desktop-sider {
+    min-width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+    margin-top: 16px;
+    padding-top: 16px;
+    height: auto;
+  }
+
+  .resizer {
+    display: none;
+  }
+}
+
+/* 桌面布局响应式优化 */
+@media (max-width: var(--breakpoint-xl)) {
+  .desktop-sider {
+    min-width: 250px;
+  }
+}
+
+@media (min-width: var(--breakpoint-xl)) {
+  .desktop-sider {
+    min-width: 280px;
+    max-width: 350px;
+  }
+}
