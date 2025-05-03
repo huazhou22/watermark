@@ -135,3 +135,139 @@ input[type="range"]::-moz-range-thumb:hover {
   color: white; /* 文本变白 */
   border-color: var(--secondary-color);
 }
+
+/* 表单样式 */
+/* 水印表单 */
+.watermark-form {
+  width: 100%;
+}
+
+/* 表单控件容器 */
+.form-controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 重置按钮容器 */
+.reset-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+/* 重置按钮 */
+.reset-button {
+  padding: 6px 12px;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+}
+
+.reset-button:hover {
+  background-color: var(--secondary-color-dark);
+}
+
+/* 表单控件 */
+.form-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 表单组 */
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* 范围输入 */
+.form-group input[type="range"] {
+  -webkit-appearance: none;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  border: none;
+}
+
+.form-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+}
+
+/* 颜色选择器 */
+.form-group input[type="color"] {
+  height: 36px;
+  cursor: pointer;
+  padding: 2px;
+}
+
+/* 移动设备表单样式 */
+.mobile-form {
+  padding: 12px 16px 16px;
+}
+
+.mobile-controls {
+  gap: 12px;
+}
+
+/* 内联表单组 */
+.inline-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inline-group label {
+  flex: 0 0 30%;
+  margin-bottom: 0;
+}
+
+.inline-input {
+  flex: 0 0 65%;
+}
+
+.color-input {
+  height: 30px;
+}
+
+/* 表单分组 */
+.form-section {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.form-section-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #444;
+}

@@ -10,12 +10,11 @@ export const dataURItoBlob = (dataURI: string): Blob => {
   return new Blob([arr], { type: 'image/png' });
 };
 
-export const generateFileName = (): string => {
-  const pad = (n: number): string => n < 10 ? '0' + n : String(n);
-
-  const d = new Date();
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}.png`;
-};
+export const generateFileName = (fileName: string): string => {
+    const extension = fileName.split('.').pop();
+    const baseName = fileName.replace(`.${extension}`, '');
+    return `watermarked_${baseName}.${extension}`;
+  };
 
 export const makeRGBAStyle = (color: string, alpha: number): string => {
   const match = color.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);

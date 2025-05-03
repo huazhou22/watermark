@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { UpOutlined, DownOutlined } from '@ant-design/icons';
 import WatermarkForm from './WatermarkForm';
 
 interface WatermarkDrawerProps {
@@ -19,36 +20,31 @@ interface WatermarkDrawerProps {
 }
 
 const WatermarkDrawer: React.FC<WatermarkDrawerProps> = (props) => {
-  // 控制抽屉是否展开的状态，默认展开
-  const [isExpanded, setIsExpanded] = useState(true);
-  const { isMobileDevice } = props;
+  const [isExpanded, setIsExpanded] = useState(false); // 默认收起
+  const { isMobileDevice, ...formProps } = props;
 
-  // 切换抽屉展开/收缩状态
   const toggleDrawer = () => {
     setIsExpanded(!isExpanded);
   };
 
-  // 如果是桌面设备，直接渲染表单
   if (!isMobileDevice) {
     return (
       <div className="desktop-form-container">
-        <WatermarkForm {...props} />
+        <WatermarkForm {...formProps} isMobileDevice={false} />
       </div>
     );
   }
 
-  // 移动设备渲染抽屉
   return (
     <div className={`watermark-drawer ${isExpanded ? 'expanded' : 'collapsed'}`}>
       <div className="drawer-header" onClick={toggleDrawer}>
         <h3>水印设置</h3>
-        <button className="toggle-button">
-          {isExpanded ? '收起' : '展开'}
-        </button>
+        <div className="handle-icon">
+          {isExpanded ? <UpOutlined /> : <DownOutlined />}
+        </div>
       </div>
-      
       <div className={`drawer-content ${isExpanded ? 'visible' : 'hidden'}`}>
-        <WatermarkForm {...props} />
+        {isExpanded && <WatermarkForm {...formProps} isMobileDevice={true} />}
       </div>
     </div>
   );

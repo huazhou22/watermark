@@ -45,7 +45,6 @@ canvas {
   padding: calc(var(--spacing-unit) * 2);
 }
 
-/* --- 预览控件 --- */
 .preview-controls {
   position: absolute;
   top: calc(var(--spacing-unit) * 1.5); /* 12px */

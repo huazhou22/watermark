@@ -1,6 +1,7 @@
 import React from 'react';
+import { Form, Input, Slider, ColorPicker, Row, Col } from 'antd';
+import type { Color } from 'antd/es/color-picker';
 
-// 在接口中添加 isMobileDevice 属性
 interface WatermarkFormProps {
   text: string;
   setText: (text: string) => void;
@@ -15,10 +16,9 @@ interface WatermarkFormProps {
   size: number;
   setSize: (size: number) => void;
   onReset: () => void;
-  isMobileDevice?: boolean; // 添加移动设备标志
+  isMobileDevice: boolean;
 }
 
-// 在组件中使用这个属性
 const WatermarkForm: React.FC<WatermarkFormProps> = ({
   text,
   setText,
@@ -32,185 +32,201 @@ const WatermarkForm: React.FC<WatermarkFormProps> = ({
   setSpace,
   size,
   setSize,
-  onReset,
-  isMobileDevice = false, // 默认为 false
+  isMobileDevice,
 }) => {
+  const handleColorChange = (value: Color) => {
+    setColor(value.toHexString());
+  };
+
+  // 为移动设备使用更紧凑的布局
+  const formItemLayout = isMobileDevice
+    ? {
+        labelCol: { span: 6 },
+        wrapperCol: { span: 18 },
+      }
+    : {
+        labelCol: { span: 6 },
+        wrapperCol: { span: 18 },
+      };
+
+  // 自定义标签样式，使标签左对齐
+  const labelStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    height: '100%',
+    paddingLeft: '4px',
+  };
+
+  // 减少表单项之间的间距
+  const formItemStyle = {
+    marginBottom: isMobileDevice ? 8 : 16,
+  };
+
   return (
-    <div className={`watermark-form ${isMobileDevice ? 'mobile-form' : ''}`}>
-      {/* 移除了原来的标题部分，因为它现在在 WatermarkDrawer 中 */}
-      <div className="form-controls-container">
-        <div className="reset-button-container">
-          <button 
-            onClick={onReset} 
-            className="reset-button"
-            title="恢复默认设置"
-          >
-            恢复默认设置
-          </button>
-        </div>
-        
-        {/* 根据设备类型使用不同的布局 */}
-        <div className={`form-controls ${isMobileDevice ? 'mobile-controls' : ''}`}>
-          {isMobileDevice ? (
-            // 移动设备布局 - 紧凑型，标签和控件在同一行
-            <>
-              <div className="form-group inline-group">
-                <label htmlFor="watermark-text">水印文字:</label>
-                <input
-                  id="watermark-text"
-                  type="text"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  placeholder="输入水印文字"
-                  className="inline-input"
-                />
-              </div>
-
-              <div className="form-group inline-group">
-                <label htmlFor="watermark-color">颜色:</label>
-                <input
-                  id="watermark-color"
-                  type="color"
-                  value={color}
-                  onChange={(e) => setColor(e.target.value)}
-                  className="inline-input color-input"
-                />
-              </div>
-
-              <div className="form-group inline-group">
-                <label htmlFor="watermark-alpha">透明度: {alpha.toFixed(1)}</label>
-                <input
-                  id="watermark-alpha"
-                  type="range"
-                  min="0.1"
-                  max="1"
-                  step="0.1"
-                  value={alpha}
-                  onChange={(e) => setAlpha(parseFloat(e.target.value))}
-                  className="inline-input"
-                />
-              </div>
-
-              <div className="form-group inline-group">
-                <label htmlFor="watermark-angle">角度: {angle}°</label>
-                <input
-                  id="watermark-angle"
-                  type="range"
-                  min="-90"
-                  max="90"
-                  value={angle}
-                  onChange={(e) => setAngle(parseInt(e.target.value))}
-                  className="inline-input"
-                />
-              </div>
-
-              <div className="form-group inline-group">
-                <label htmlFor="watermark-space">间距: {space}</label>
-                <input
-                  id="watermark-space"
-                  type="range"
-                  min="1"
-                  max="5"
-                  step="0.5"
-                  value={space}
-                  onChange={(e) => setSpace(parseFloat(e.target.value))}
-                  className="inline-input"
-                />
-              </div>
-
-              <div className="form-group inline-group">
-                <label htmlFor="watermark-size">大小: {size}</label>
-                <input
-                  id="watermark-size"
-                  type="range"
-                  min="0.5"
-                  max="3"
-                  step="0.1"
-                  value={size}
-                  onChange={(e) => setSize(parseFloat(e.target.value))}
-                  className="inline-input"
-                />
-              </div>
-            </>
-          ) : (
-            // 桌面布局 - 原始布局
-            <>
-              <div className="form-group">
-                <label htmlFor="watermark-text">水印文字:</label>
-                <input
-                  id="watermark-text"
-                  type="text"
+    <Form 
+      {...formItemLayout} 
+      size={isMobileDevice ? 'small' : 'middle'}
+      style={{ width: '100%' }}
+    >
+      {isMobileDevice ? (
+        // 移动设备下的紧凑布局
+        <>
+          <Row gutter={4} align="middle">
+            <Col span={6}>
+              <div style={labelStyle}>水印文字</div>
+            </Col>
+            <Col span={18}>
+              <Form.Item style={formItemStyle}>
+                <Input
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="输入水印文字"
                 />
-              </div>
+              </Form.Item>
+            </Col>
+          </Row>
 
-              <div className="form-group">
-                <label htmlFor="watermark-color">颜色:</label>
-                <input
-                  id="watermark-color"
-                  type="color"
+          <Row gutter={4} align="middle">
+            <Col span={6}>
+              <div style={labelStyle}>水印颜色</div>
+            </Col>
+            <Col span={18}>
+              <Form.Item style={formItemStyle}>
+                <ColorPicker
                   value={color}
-                  onChange={(e) => setColor(e.target.value)}
+                  onChange={handleColorChange}
+                  showText
                 />
-              </div>
+              </Form.Item>
+            </Col>
+          </Row>
 
-              <div className="form-group">
-                <label htmlFor="watermark-alpha">透明度: {alpha.toFixed(1)}</label>
-                <input
-                  id="watermark-alpha"
-                  type="range"
-                  min="0.1"
-                  max="1"
-                  step="0.1"
+          <Row gutter={4} align="middle">
+            <Col span={6}>
+              <div style={labelStyle}>透明度</div>
+            </Col>
+            <Col span={18}>
+              <Form.Item style={formItemStyle}>
+                <Slider
+                  min={0}
+                  max={1}
+                  step={0.01}
                   value={alpha}
-                  onChange={(e) => setAlpha(parseFloat(e.target.value))}
+                  onChange={setAlpha}
                 />
-              </div>
+              </Form.Item>
+            </Col>
+          </Row>
 
-              <div className="form-group">
-                <label htmlFor="watermark-angle">角度: {angle}°</label>
-                <input
-                  id="watermark-angle"
-                  type="range"
-                  min="-90"
-                  max="90"
+          <Row gutter={4} align="middle">
+            <Col span={6}>
+              <div style={labelStyle}>旋转角度</div>
+            </Col>
+            <Col span={18}>
+              <Form.Item style={formItemStyle}>
+                <Slider
+                  min={-90}
+                  max={90}
                   value={angle}
-                  onChange={(e) => setAngle(parseInt(e.target.value))}
+                  onChange={setAngle}
                 />
-              </div>
+              </Form.Item>
+            </Col>
+          </Row>
 
-              <div className="form-group">
-                <label htmlFor="watermark-space">间距: {space}</label>
-                <input
-                  id="watermark-space"
-                  type="range"
-                  min="1"
-                  max="5"
-                  step="0.5"
+          <Row gutter={4} align="middle">
+            <Col span={6}>
+              <div style={labelStyle}>间距大小</div>
+            </Col>
+            <Col span={18}>
+              <Form.Item style={formItemStyle}>
+                <Slider
+                  min={1}
+                  max={10}
                   value={space}
-                  onChange={(e) => setSpace(parseFloat(e.target.value))}
+                  onChange={setSpace}
                 />
-              </div>
+              </Form.Item>
+            </Col>
+          </Row>
 
-              <div className="form-group">
-                <label htmlFor="watermark-size">大小: {size}</label>
-                <input
-                  id="watermark-size"
-                  type="range"
-                  min="0.5"
-                  max="3"
-                  step="0.1"
+          <Row gutter={4} align="middle">
+            <Col span={6}>
+              <div style={labelStyle}>文字大小</div>
+            </Col>
+            <Col span={18}>
+              <Form.Item style={formItemStyle}>
+                <Slider
+                  min={0.5}
+                  max={5}
+                  step={0.1}
                   value={size}
-                  onChange={(e) => setSize(parseFloat(e.target.value))}
+                  onChange={setSize}
                 />
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
+              </Form.Item>
+            </Col>
+          </Row>
+        </>
+      ) : (
+        // 桌面设备下的常规布局
+        <>
+          <Form.Item label="水印文字" style={formItemStyle}>
+            <Input
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="输入水印文字"
+            />
+          </Form.Item>
+
+          <Form.Item label="水印颜色" style={formItemStyle}>
+            <ColorPicker
+              value={color}
+              onChange={handleColorChange}
+              showText
+            />
+          </Form.Item>
+
+          <Form.Item label="透明度" style={formItemStyle}>
+            <Slider
+              min={0}
+              max={1}
+              step={0.01}
+              value={alpha}
+              onChange={setAlpha}
+            />
+          </Form.Item>
+
+          <Form.Item label="旋转角度" style={formItemStyle}>
+            <Slider
+              min={-90}
+              max={90}
+              value={angle}
+              onChange={setAngle}
+            />
+          </Form.Item>
+
+          <Form.Item label="间距大小" style={formItemStyle}>
+            <Slider
+              min={1}
+              max={10}
+              value={space}
+              onChange={setSpace}
+            />
+          </Form.Item>
+
+          <Form.Item label="文字大小" style={formItemStyle}>
+            <Slider
+              min={0.5}
+              max={5}
+              step={0.1}
+              value={size}
+              onChange={setSize}
+            />
+          </Form.Item>
+        </>
+      )}
+    </Form>
   );
 };
 

@@ -7,3 +7,127 @@
 @import './forms.css';
 @import './watermark.css';
 @import './drawer.css'; /* 添加抽屉样式 */
+
+/* 自定义样式，用于扩展 Ant Design */
+
+/* 缩略图样式 */
+.thumbnail-strip {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 8px;
+  scrollbar-width: thin;
+}
+
+.thumbnail-strip::-webkit-scrollbar {
+  height: 6px;
+}
+
+.thumbnail-strip::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.thumbnail-item {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+}
+
+.thumbnail-item.selected {
+  border-color: #1677ff;
+}
+
+.thumbnail-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.delete-thumb-button {
+  position: absolute !important;
+  top: 2px !important;
+  right: 2px !important;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.thumbnail-item:hover .delete-thumb-button {
+  opacity: 1;
+}
+
+/* 预览容器样式 */
+.preview-container {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* 移动设备适配 */
+@media (max-width: 576px) {
+  .thumbnail-item {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+
+/* 预览容器外部包裹层 */
+.preview-container-outer {
+  /* 可以添加背景色等 */
+}
+/* 预览区域控件（下载、删除、缩放） */
+.preview-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  padding: 5px 10px;
+  border-radius: 4px;
+  z-index: 10; /* 确保在 Canvas 上方 */
+  box-shadow: none;
+}
+
+/* 缩放控件特定样式 */
+.zoom-controls .ant-btn {
+  padding: 0 8px; /* 调整按钮内边距 */
+}
+
+/* 确保 Canvas 在 TransformComponent 中居中 */
+.react-transform-component {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* 移动端抽屉按钮 */
+@media (max-width: 768px) {
+  /* 可以根据需要调整按钮样式 */
+}
