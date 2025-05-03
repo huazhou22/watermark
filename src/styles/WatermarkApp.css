@@ -1,55 +1,6 @@
 /* WatermarkApp组件专用样式 */
 
-/* 缩略图样式 */
-.thumbnail-item {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  margin-right: 8px;
-  border: 2px solid transparent;
-  cursor: pointer;
-  position: relative;
-}
-
-.thumbnail-item.selected {
-  border-color: var(--primary-color);
-}
-
-.thumbnail-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* 缩略图容器 */
-.thumbnail-strip {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 5px 0;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* 表单样式 */
-.desktop-sider .ant-form-item-label > label {
-  white-space: normal;
-  height: auto;
-  line-height: 1.5;
-}
-
-.settings-header {
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.settings-title {
-  margin: 0;
-}
-
+/* 加载文本容器 */
 .loading-text-container {
   padding: 30px;
   text-align: center;

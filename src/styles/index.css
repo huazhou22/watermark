@@ -7,7 +7,6 @@
 @import './forms.css';      /* 表单样式 */
 @import './watermark.css';  /* 水印组件样式 */
 @import './drawer.css';     /* 抽屉组件样式 */
-@import './mobile.css';     /* 移动设备专用样式 */
 @import './orientation.css'; /* 屏幕方向相关样式 */
 @import './responsive.css'; /* 响应式样式放在最后，确保可以覆盖其他样式 */
 
@@ -44,10 +43,6 @@
     min-height: var(--mobile-input-height);
   }
 }
-
-/* 删除重复的缩略图样式，已在thumbnails.css中定义 */
-
-/* 删除重复的预览容器样式，已在preview.css中定义 */
 
 /* 缩放控件特定样式 */
 .zoom-controls .ant-btn {

@@ -161,7 +161,7 @@ const WatermarkApp: React.FC = () => {
     return images.map((imgItem) => (
       <div
         key={imgItem.id}
-        className={`${isMobileDevice ? 'mobile-thumbnail-item' : 'thumbnail-item'} ${selectedImageId === imgItem.id ? 'selected' : ''}`}
+        className={`thumbnail-item ${selectedImageId === imgItem.id ? 'selected' : ''}`}
         onClick={() => handleSelectImage(imgItem.id)}
       >
         {!imgItem.imageElement ? (
