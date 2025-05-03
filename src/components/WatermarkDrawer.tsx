@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from 'antd';
 import { UpOutlined, DownOutlined } from '@ant-design/icons';
 import '../styles/drawer.css';
@@ -77,7 +77,7 @@ const WatermarkDrawer: React.FC<WatermarkDrawerProps> = ({
   };
 
   // 处理拖动
-  const handleDrag = (e: TouchEvent | MouseEvent) => {
+  const handleDrag = useCallback((e: TouchEvent | MouseEvent) => {
     if (!dragging || currentSize === null) return;
 
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
@@ -96,10 +96,10 @@ const WatermarkDrawer: React.FC<WatermarkDrawerProps> = ({
         drawerRef.current.style.width = `${newWidth}px`;
       }
     }
-  };
+  }, [dragging, currentSize, startY, startX, headerSize, position]);
 
   // 处理拖动结束
-  const handleDragEnd = () => {
+  const handleDragEnd = useCallback(() => {
     setDragging(false);
     setCurrentSize(null);
 
@@ -123,7 +123,7 @@ const WatermarkDrawer: React.FC<WatermarkDrawerProps> = ({
         }
       }
     }
-  };
+  }, [position, setExpanded]);
 
   // 添加和移除事件监听器
   useEffect(() => {
@@ -140,7 +140,7 @@ const WatermarkDrawer: React.FC<WatermarkDrawerProps> = ({
       window.removeEventListener('mouseup', handleDragEnd);
       window.removeEventListener('touchend', handleDragEnd);
     };
-  }, [dragging]);
+  }, [dragging, handleDrag, handleDragEnd]);
 
   // 根据位置和方向设置样式
   const getDrawerStyle = () => {

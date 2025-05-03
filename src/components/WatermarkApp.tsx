@@ -237,27 +237,46 @@ const WatermarkApp: React.FC = () => {
             overflow: 'hidden' // 确保这一行存在
           }}
         >
-          <canvas
-            ref={canvasRef}
-            style={{
-              maxWidth: '100%',
-              maxHeight: '100%',
-              objectFit: 'contain',
-              display: 'block',
-            }}
-          />
+          <div className="canvas-container">
+            <canvas
+              ref={canvasRef}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                objectFit: 'contain',
+                display: 'block',
+              }}
+            />
+            {isMobileDevice && (
+              <div className="mobile-download-tip">
+                提示：如果下载按钮无效，可长按图片保存
+              </div>
+            )}
+          </div>
         </TransformComponent>
         {selectedImageId && (
           <div className="preview-controls">
             <Space>
               <ZoomControls />
-              <Button
-                type="primary"
-                icon={<DownloadOutlined />}
-                onClick={handleDownload}
-              >
-                下载
-              </Button>
+              <Space.Compact>
+                <Button
+                  type="primary"
+                  icon={<DownloadOutlined />}
+                  onClick={handleDownload}
+                >
+                  下载
+                </Button>
+                {isMobileDevice && (
+                  <Tooltip title="在新窗口中打开图片">
+                    <Button
+                      type="primary"
+                      onClick={handleOpenInNewWindow}
+                    >
+                      查看
+                    </Button>
+                  </Tooltip>
+                )}
+              </Space.Compact>
               <Button
                 danger
                 icon={<DeleteOutlined />}
@@ -312,6 +331,15 @@ const WatermarkApp: React.FC = () => {
     }
     ctx.fillText(text, 0, 0);
     ctx.restore();
+
+    // 为移动设备添加长按保存功能
+    if (isMobileDevice && canvas) {
+      // 移除之前的事件监听器（如果有）
+      canvas.removeEventListener('touchstart', handleCanvasTouchStart);
+
+      // 添加新的事件监听器
+      canvas.addEventListener('touchstart', handleCanvasTouchStart);
+    }
   }, [
     selectedImageId,
     images,
@@ -321,7 +349,20 @@ const WatermarkApp: React.FC = () => {
     debouncedAngle,
     debouncedSpace,
     debouncedSize,
+    isMobileDevice, // 添加isMobileDevice作为依赖项
   ]);
+
+  // 处理Canvas长按事件（用于移动设备）
+  const handleCanvasTouchStart = useCallback((e: TouchEvent) => {
+    // 防止默认行为，如滚动
+    e.preventDefault();
+
+    // 对于iOS设备，长按可能会显示上下文菜单，这是我们想要的
+    // 对于Android设备，我们可能需要手动处理长按
+
+    // 注意：这个函数不需要做太多，因为我们主要是想确保canvas可以被长按
+    // 大多数移动浏览器会自动提供保存图片的选项
+  }, []);
 
   // 水印表单组件已直接在布局中使用，不再需要单独的渲染函数
 
@@ -354,17 +395,121 @@ const WatermarkApp: React.FC = () => {
     return `watermarked_${baseName}.${extension}`;
   };
 
+  // 在新窗口中打开图片（移动设备备用下载方法）
+  const handleOpenInNewWindow = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    try {
+      // 显示加载提示
+      message.loading({ content: '正在准备图片...', key: 'openImage' });
+
+      // 转换为Blob
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          message.error({ content: '生成图片失败，请重试', key: 'openImage' });
+          return;
+        }
+
+        // 创建URL并在新窗口打开
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+
+        // 提示用户如何保存
+        message.success({
+          content: '图片已在新窗口打开，长按图片可保存',
+          key: 'openImage',
+          duration: 5
+        });
+
+        // 我们不会立即释放URL，因为用户可能需要时间保存图片
+        // 设置一个较长的超时时间来释放URL
+        setTimeout(() => {
+          URL.revokeObjectURL(url);
+        }, 60000); // 1分钟后释放
+      }, 'image/png');
+    } catch (error) {
+      console.error('打开图片出错:', error);
+      message.error({ content: '打开图片失败，请重试', key: 'openImage' });
+    }
+  };
+
   const handleDownload = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const selectedImage = images.find((img) => img.id === selectedImageId);
     if (!selectedImage) return;
-    const link = document.createElement('a');
-    link.download = generateCustomFileName(selectedImage.file.name);
-    link.href = canvas.toDataURL('image/png');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+
+    try {
+      // 显示加载提示
+      message.loading({ content: '正在准备下载...', key: 'download' });
+
+      // 使用更兼容的方式：先转换为Blob
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          message.error({ content: '生成图片失败，请重试', key: 'download' });
+          return;
+        }
+
+        const fileName = generateCustomFileName(selectedImage.file.name);
+
+        // 检测是否为移动设备
+        if (isMobileDevice) {
+          // 移动设备处理方式
+          try {
+            // 创建URL
+            const url = URL.createObjectURL(blob);
+
+            // 创建链接
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            link.setAttribute('target', '_blank'); // 在新窗口打开
+            link.setAttribute('rel', 'noopener noreferrer');
+
+            // 模拟点击
+            document.body.appendChild(link);
+            link.click();
+
+            // 延迟移除链接和释放URL
+            setTimeout(() => {
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+              message.success({ content: '下载已准备完成', key: 'download' });
+            }, 100);
+          } catch (err) {
+            console.error('移动设备下载失败:', err);
+            message.error({
+              content: '下载失败。请尝试长按图片并选择"保存图片"',
+              key: 'download',
+              duration: 5
+            });
+
+            // 如果自动下载失败，提供备用方案：在新窗口打开图片
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+          }
+        } else {
+          // 桌面设备处理方式
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.download = fileName;
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          // 释放URL
+          setTimeout(() => {
+            URL.revokeObjectURL(url);
+            message.success({ content: '下载成功', key: 'download' });
+          }, 100);
+        }
+      }, 'image/png');
+    } catch (error) {
+      console.error('下载过程出错:', error);
+      message.error({ content: '下载失败，请重试', key: 'download' });
+    }
   };
 
   const handleResetSettings = useCallback(() => {
