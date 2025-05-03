@@ -103,6 +103,7 @@
   display: flex;
   align-items: center;
   -webkit-overflow-scrolling: touch;
+  padding: 5px 0;
 }
 
 /* 缩略图项 */
@@ -115,6 +116,10 @@
   border-radius: var(--border-radius);
   overflow: hidden;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--light-color);
 }
 
 .thumbnail-item.selected {
@@ -148,7 +153,7 @@ canvas {
   .layout-landscape {
     flex-direction: column;
   }
-  
+
   .layout-landscape .settings-area {
     width: 100%;
     max-width: 100%;
