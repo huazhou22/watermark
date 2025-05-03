@@ -20,7 +20,7 @@ import {
   UndoOutlined,
 } from '@ant-design/icons';
 import { TransformWrapper, TransformComponent, useControls } from 'react-zoom-pan-pinch';
-import { dataURItoBlob, makeRGBAStyle } from '../utils/imageUtils';
+import { makeRGBAStyle } from '../utils/imageUtils';
 import { v4 as uuidv4 } from 'uuid';
 import useDebounce from '../hooks/useDebounce';
 import WatermarkForm from './WatermarkForm';
@@ -276,7 +276,6 @@ const WatermarkApp: React.FC = () => {
     const textWidth = ctx.measureText(text).width;
     if (textWidth <= 0) return;
     const margin = ctx.measureText('啊').width;
-    const textHeight = fontSize;
     const step = Math.sqrt(Math.pow(canvas.width, 2) + Math.pow(canvas.height, 2));
     const xCount = Math.ceil(step / (textWidth + margin));
     const yCount = Math.ceil((step / (debouncedSpace * fontSize)) / 2);

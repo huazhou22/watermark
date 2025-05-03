@@ -1,14 +1,3 @@
-export const dataURItoBlob = (dataURI: string): Blob => {
-  const binStr = atob(dataURI.split(',')[1]);
-  const len = binStr.length;
-  const arr = new Uint8Array(len);
-
-  for (let i = 0; i < len; i++) {
-    arr[i] = binStr.charCodeAt(i);
-  }
-  
-  return new Blob([arr], { type: 'image/png' });
-};
 
 export const generateFileName = (fileName: string): string => {
     const extension = fileName.split('.').pop();
