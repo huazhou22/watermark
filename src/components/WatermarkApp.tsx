@@ -294,6 +294,18 @@ const WatermarkApp: React.FC = () => {
     );
   };
 
+  // 处理Canvas长按事件（用于移动设备）
+  const handleCanvasTouchStart = useCallback((e: TouchEvent) => {
+    // 防止默认行为，如滚动
+    e.preventDefault();
+
+    // 对于iOS设备，长按可能会显示上下文菜单，这是我们想要的
+    // 对于Android设备，我们可能需要手动处理长按
+
+    // 注意：这个函数不需要做太多，因为我们主要是想确保canvas可以被长按
+    // 大多数移动浏览器会自动提供保存图片的选项
+  }, []);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const selectedImage = images.find((img) => img.id === selectedImageId);
@@ -340,6 +352,13 @@ const WatermarkApp: React.FC = () => {
       // 添加新的事件监听器
       canvas.addEventListener('touchstart', handleCanvasTouchStart);
     }
+
+    // 清理函数 - 移除事件监听器
+    return () => {
+      if (canvas && isMobileDevice) {
+        canvas.removeEventListener('touchstart', handleCanvasTouchStart);
+      }
+    };
   }, [
     selectedImageId,
     images,
@@ -349,20 +368,9 @@ const WatermarkApp: React.FC = () => {
     debouncedAngle,
     debouncedSpace,
     debouncedSize,
-    isMobileDevice, // 添加isMobileDevice作为依赖项
+    isMobileDevice,
+    handleCanvasTouchStart, // 添加handleCanvasTouchStart作为依赖项
   ]);
-
-  // 处理Canvas长按事件（用于移动设备）
-  const handleCanvasTouchStart = useCallback((e: TouchEvent) => {
-    // 防止默认行为，如滚动
-    e.preventDefault();
-
-    // 对于iOS设备，长按可能会显示上下文菜单，这是我们想要的
-    // 对于Android设备，我们可能需要手动处理长按
-
-    // 注意：这个函数不需要做太多，因为我们主要是想确保canvas可以被长按
-    // 大多数移动浏览器会自动提供保存图片的选项
-  }, []);
 
   // 水印表单组件已直接在布局中使用，不再需要单独的渲染函数
 
