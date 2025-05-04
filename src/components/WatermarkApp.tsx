@@ -289,7 +289,10 @@ const WatermarkApp: React.FC = () => {
 
     const fontSize = debouncedSize * Math.max(15, Math.min(canvas.width, canvas.height) / 25);
     ctx.font = `bold ${fontSize}px -apple-system,"Helvetica Neue",Helvetica,Arial,"PingFang SC","Hiragino Sans GB","WenQuanYi Micro Hei",sans-serif`;
-    ctx.fillStyle = makeRGBAStyle(color, debouncedAlpha);
+    
+    // 不再直接设置fillStyle
+    // ctx.fillStyle = makeRGBAStyle(color, debouncedAlpha);
+    
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
@@ -303,14 +306,41 @@ const WatermarkApp: React.FC = () => {
     ctx.save();
     ctx.translate(canvas.width / 2, canvas.height / 2);
     ctx.rotate((debouncedAngle * Math.PI) / 180);
+    
+    // 计算描边颜色 - 与填充颜色相反
+    const getContrastColor = (hexColor: string): string => {
+      const match = hexColor.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+      if (!match) return '#ffffff';
+      
+      const r = 255 - parseInt(match[1], 16);
+      const g = 255 - parseInt(match[2], 16);
+      const b = 255 - parseInt(match[3], 16);
+      
+      return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    };
+    
+    const strokeColor = getContrastColor(color);
+    
+    // 绘制水印文字函数
+    const drawWatermarkText = (x: number, y: number) => {
+      // 设置描边样式
+      ctx.strokeStyle = makeRGBAStyle(strokeColor, debouncedAlpha + 0.2);
+      ctx.lineWidth = fontSize * 0.05; // 描边宽度
+      ctx.strokeText(text, x, y);
+      
+      // 设置填充样式
+      ctx.fillStyle = makeRGBAStyle(color, debouncedAlpha);
+      ctx.fillText(text, x, y);
+    };
+    
     for (let i = -xCount; i <= xCount; i++) {
       for (let j = -yCount; j <= yCount; j++) {
         if (i !== 0 || j !== 0) {
-          ctx.fillText(text, (textWidth + margin) * i, debouncedSpace * fontSize * j);
+          drawWatermarkText((textWidth + margin) * i, debouncedSpace * fontSize * j);
         }
       }
     }
-    ctx.fillText(text, 0, 0);
+    drawWatermarkText(0, 0);
     ctx.restore();
   }, [
     selectedImageId,
