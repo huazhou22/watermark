@@ -20,6 +20,7 @@ import {
 } from '@ant-design/icons';
 import { TransformWrapper, TransformComponent, useControls } from 'react-zoom-pan-pinch';
 import { makeRGBAStyle } from '../utils/imageUtils';
+import { downloadImage } from '../utils/downloadUtils';
 import { v4 as uuidv4 } from 'uuid';
 import useDebounce from '../hooks/useDebounce';
 import useOrientation from '../hooks/useOrientation';
@@ -378,82 +379,25 @@ const WatermarkApp: React.FC = () => {
     }
   };
 
-  const generateCustomFileName = (fileName: string): string => {
-    const extension = fileName.split('.').pop();
-    const baseName = fileName.replace(`.${extension}`, '');
-    return `watermarked_${baseName}.${extension}`;
-  };
-
-
-
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const selectedImage = images.find((img) => img.id === selectedImageId);
     if (!selectedImage) return;
 
     try {
-      // 显示加载提示
-      message.loading({ content: '正在准备下载...', key: 'download' });
+      const fileName = selectedImage.file.name;
 
-      // 使用更兼容的方式：先转换为Blob
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          message.error({ content: '生成图片失败，请重试', key: 'download' });
-          return;
-        }
+      // 使用新的下载工具
+      const success = await downloadImage(canvas, fileName, (progressMessage) => {
+        message.loading({ content: progressMessage, key: 'download' });
+      });
 
-        const fileName = generateCustomFileName(selectedImage.file.name);
-
-        // 检测是否为移动设备
-        if (isMobileDevice) {
-          // 移动设备处理方式
-          try {
-            // 创建URL
-            const url = URL.createObjectURL(blob);
-
-            // 创建链接
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = fileName;
-            link.setAttribute('target', '_blank'); // 在新窗口打开
-            link.setAttribute('rel', 'noopener noreferrer');
-
-            // 模拟点击
-            document.body.appendChild(link);
-            link.click();
-
-            // 延迟移除链接和释放URL
-            setTimeout(() => {
-              document.body.removeChild(link);
-              URL.revokeObjectURL(url);
-              message.success({ content: '下载已准备完成', key: 'download' });
-            }, 100);
-          } catch (err) {
-            console.error('移动设备下载失败:', err);
-            message.error({
-              content: '下载失败，请重试',
-              key: 'download',
-              duration: 3
-            });
-          }
-        } else {
-          // 桌面设备处理方式
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.download = fileName;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-
-          // 释放URL
-          setTimeout(() => {
-            URL.revokeObjectURL(url);
-            message.success({ content: '下载成功', key: 'download' });
-          }, 100);
-        }
-      }, 'image/png');
+      if (success) {
+        message.success({ content: '图片下载成功', key: 'download' });
+      } else {
+        message.error({ content: '下载失败，请重试', key: 'download' });
+      }
     } catch (error) {
       console.error('下载过程出错:', error);
       message.error({ content: '下载失败，请重试', key: 'download' });

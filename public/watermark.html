@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Watermark Service</title>
+  <script src="watermark.js"></script>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    window.addWatermark = async function(imagePath, params) {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      // Load image
+      img.src = imagePath; // Injected by Puppeteer/Playwright
+      await new Promise(resolve => img.onload = resolve);
+
+      // Set canvas size
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      // Default parameters (aligned with WatermarkApp.tsx)
+      const defaults = {
+        type: 'text',                    // Watermark type
+        mode: 'tile',                    // Layout mode
+        opacity: 0.1,                    // Transparency
+        angle: -35,                      // Rotation angle
+        spacing: 4,                      // Spacing multiplier
+        text: '公众号琴姐惠生活',         // Text content
+        font: '-apple-system, "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif', // Font stack
+        size: 1.5,                       // Font size multiplier
+        color: '#000000',                // Text color
+        scale: 1.0                       // Image scale
+      };
+      const config = { ...defaults, ...params };
+
+      // 创建RGBA样式字符串
+      const makeRGBAStyle = (hexColor, alpha) => {
+        const match = hexColor.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+        if (!match) return `rgba(0, 0, 0, ${alpha})`;
+        
+        const r = parseInt(match[1], 16);
+        const g = parseInt(match[2], 16);
+        const b = parseInt(match[3], 16);
+        
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      };
+      
+      // 计算描边颜色 - 与填充颜色相反
+      const getContrastColor = (hexColor) => {
+        const match = hexColor.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+        if (!match) return '#ffffff';
+        
+        const r = 255 - parseInt(match[1], 16);
+        const g = 255 - parseInt(match[2], 16);
+        const b = 255 - parseInt(match[3], 16);
+        
+        return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+      };
+
+      // Apply watermark
+      ctx.globalAlpha = 1.0; // 重置透明度，我们将在填充和描边样式中单独设置
+      
+      if (config.type === 'text') {
+        // Calculate text size (aligned with WatermarkApp.tsx)
+        const textSize = config.size * Math.max(15, Math.min(canvas.width, canvas.height) / 25);
+        ctx.font = `bold ${textSize}px ${config.font}`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        if (!config.text) {
+          // Handle empty text (aligned with WatermarkApp.tsx)
+          return canvas.toDataURL('image/png');
+        }
+
+        if (config.mode === 'tile') {
+          const textMetrics = ctx.measureText(config.text);
+          const width = textMetrics.width;
+          if (width <= 0) {
+            return canvas.toDataURL('image/png'); // Prevent drawing with invalid width
+          }
+
+          // Calculate step and margin (aligned with WatermarkApp.tsx)
+          const step = Math.sqrt(Math.pow(canvas.width, 2) + Math.pow(canvas.height, 2));
+          const margin = ctx.measureText('啊').width; // Use Chinese character for margin
+          const xCount = Math.ceil(step / (width + margin));
+          const yCount = Math.ceil((step / (config.spacing * textSize)) / 2);
+
+          ctx.save();
+          ctx.translate(canvas.width / 2, canvas.height / 2);
+          ctx.rotate(config.angle * Math.PI / 180);
+          
+          // 获取描边颜色
+          const strokeColor = getContrastColor(config.color);
+          
+          // 绘制水印文字函数
+          const drawWatermarkText = (x, y) => {
+            // 设置描边样式
+            ctx.strokeStyle = makeRGBAStyle(strokeColor, config.opacity + 0.2);
+            ctx.lineWidth = textSize * 0.05; // 描边宽度
+            ctx.strokeText(config.text, x, y);
+            
+            // 设置填充样式
+            ctx.fillStyle = makeRGBAStyle(config.color, config.opacity);
+            ctx.fillText(config.text, x, y);
+          };
+
+          // Draw tiled text
+          for (let i = -xCount; i <= xCount; i++) {
+            for (let j = -yCount; j <= yCount; j++) {
+              if (i !== 0 || j !== 0) {
+                drawWatermarkText((width + margin) * i, config.spacing * textSize * j);
+              }
+            }
+          }
+          drawWatermarkText(0, 0);
+          ctx.restore();
+        } else if (config.mode === 'center') {
+          ctx.save();
+          ctx.translate(canvas.width / 2, canvas.height / 2);
+          ctx.rotate(config.angle * Math.PI / 180);
+          
+          // 获取描边颜色
+          const strokeColor = getContrastColor(config.color);
+          
+          // 设置描边样式
+          ctx.strokeStyle = makeRGBAStyle(strokeColor, config.opacity + 0.2);
+          ctx.lineWidth = textSize * 0.05; // 描边宽度
+          ctx.strokeText(config.text, 0, 0);
+          
+          // 设置填充样式
+          ctx.fillStyle = makeRGBAStyle(config.color, config.opacity);
+          ctx.fillText(config.text, 0, 0);
+          
+          ctx.restore();
+        } else if (config.mode === 'stretch') {
+          const stretchFontSize = canvas.height / 10;
+          ctx.font = `bold ${stretchFontSize}px ${config.font}`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.save();
+          ctx.translate(canvas.width / 2, canvas.height / 2);
+          
+          // 获取描边颜色
+          const strokeColor = getContrastColor(config.color);
+          
+          // 设置描边样式
+          ctx.strokeStyle = makeRGBAStyle(strokeColor, config.opacity + 0.2);
+          ctx.lineWidth = stretchFontSize * 0.05; // 描边宽度
+          ctx.strokeText(config.text, 0, 0);
+          
+          // 设置填充样式
+          ctx.fillStyle = makeRGBAStyle(config.color, config.opacity);
+          ctx.fillText(config.text, 0, 0);
+          
+          ctx.restore();
+        }
+      } else if (config.type === 'image' && config.watermark) {
+        // 图片水印保持原有逻辑
+        ctx.globalAlpha = config.opacity; // 对图片水印使用全局透明度
+        const watermark = new Image();
+        watermark.src = config.watermark;
+        await new Promise(resolve => watermark.onload = resolve);
+        const wmWidth = watermark.width * config.scale;
+        const wmHeight = watermark.height * config.scale;
+
+        if (config.mode === 'tile') {
+          const spacingX = config.spacing;
+          const spacingY = config.spacing;
+          for (let y = -canvas.height; y < canvas.height * 2; y += spacingY) {
+            for (let x = -canvas.width; x < canvas.width * 2; x += spacingX) {
+              ctx.save();
+              ctx.translate(x, y);
+              ctx.rotate(config.angle * Math.PI / 180);
+              ctx.drawImage(watermark, 0, 0, wmWidth, wmHeight);
+              ctx.restore();
+            }
+          }
+        } else if (config.mode === 'center') {
+          const x = (canvas.width - wmWidth) / 2;
+          const y = (canvas.height - wmHeight) / 2;
+          ctx.translate(x + wmWidth / 2, y + wmHeight / 2);
+          ctx.rotate(config.angle * Math.PI / 180);
+          ctx.drawImage(watermark, -wmWidth / 2, -wmHeight / 2, wmWidth, wmHeight);
+        } else if (config.mode === 'stretch') {
+          ctx.drawImage(watermark, 0, 0, canvas.width, canvas.height);
+        }
+      }
+
+      // Export image
+      return canvas.toDataURL('image/png');
+    };
+  </script>
+</body>
+</html>

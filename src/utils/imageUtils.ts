@@ -1,10 +1,4 @@
 
-export const generateFileName = (fileName: string): string => {
-    const extension = fileName.split('.').pop();
-    const baseName = fileName.replace(`.${extension}`, '');
-    return `watermarked_${baseName}.${extension}`;
-  };
-
 export const makeRGBAStyle = (color: string, alpha: number): string => {
   const match = color.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
   
