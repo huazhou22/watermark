@@ -3,8 +3,8 @@ const urlsToCache = [
   '/',                    // 根路径，通常映射到 index.html
   '/index.html',         // 主页面
   '/offline.html',       // 离线回退页面
-  '/static/js/main.c972b482.js',   // 替换为实际的 JS 文件名
-  '/static/css/main.540eafe2.css', // 替换为实际的 CSS 文件名
+  '/static/js/main.js',   // 替换为实际的 JS 文件名
+  '/static/css/main.css', // 替换为实际的 CSS 文件名
   '/static/media/icon-192.png',    // 图标
   '/static/media/icon-512.png'     // 图标
 ];
