@@ -2,7 +2,7 @@
   "name": "图片加水印工具",
   "short_name": "图片加水印",
   "description": "可批量给图片加定制化水印",
-  "start_url": "./",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
@@ -18,5 +18,6 @@
       "type": "image/png"
     }
   ],
-  "scope": "./"
+  "scope": "./",
+  "id": "watermark51"
 }

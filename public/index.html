@@ -6,12 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="图片加水印工具" />
-    <link rel="manifest" href="manifest.json" />
+    <link rel="manifest" href="./manifest.json" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <title>图片加水印</title>
   </head>
   <body>
     <noscript>您需要启用JavaScript来运行此应用。</noscript>
+    <script>
+    // 注册 Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(registration => {
+            console.log('Service Worker 注册成功:', registration);
+          })
+          .catch(error => {
+            console.error('Service Worker 注册失败:', error);
+          });
+      });
+    }
+  </script>
     <div id="root"></div>
   </body>
 </html>
